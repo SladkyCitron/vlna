@@ -2,9 +2,12 @@ package main
 
 import (
 	"embed"
+	"log/slog"
+	"os"
 
 	"log"
 
+	"github.com/SladkyCitron/slogcolor"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -12,8 +15,11 @@ import (
 var assets embed.FS
 
 func main() {
+	logger := slog.New(slogcolor.NewHandler(os.Stderr, slogcolor.DefaultOptions))
+	slog.SetDefault(logger)
+
 	app := application.New(application.Options{
-		Name:        "vlna",
+		Name:        "Vlna",
 		Description: "Internet radio player",
 		Services:    []application.Service{},
 		Assets: application.AssetOptions{
@@ -22,6 +28,7 @@ func main() {
 		Mac: application.MacOptions{
 			ApplicationShouldTerminateAfterLastWindowClosed: true,
 		},
+		Logger: logger,
 	})
 
 	app.Window.NewWithOptions(application.WebviewWindowOptions{
