@@ -19,6 +19,7 @@ frontend/dist/
 frontend/bindings/
 .task
 bin/
+build/linux/*.desktop
 
 # Svelte, Vite, Node
 frontend/node_modules/
