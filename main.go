@@ -43,6 +43,7 @@ func main() {
 		},
 		BackgroundColour: application.NewRGB(6, 7, 15),
 		URL:              "/",
+		Frameless:        true,
 	})
 
 	// Run the application. This blocks until the application has been exited.
