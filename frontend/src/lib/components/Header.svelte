@@ -1,7 +1,25 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { Window } from "@wailsio/runtime";
   import { Button } from "$lib/components/ui/button";
-  import { Minus, Maximize, X } from "@lucide/svelte";
+  import { Minus, Maximize, Minimize, X } from "@lucide/svelte";
+
+  let maximized = false;
+
+  onMount(async () => {
+    maximized = await Window.IsMaximised();
+  });
+
+  function toggleMaximise() {
+    Window.IsMaximised().then((isMaximised) => {
+      if (isMaximised) {
+        Window.UnMaximise();
+      } else {
+        Window.Maximise();
+      }
+      maximized = !isMaximised;
+    });
+  }
 </script>
 
 <header
@@ -12,8 +30,12 @@
     <Button variant="ghost" size="icon" onclick={Window.Minimise}>
       <Minus />
     </Button>
-    <Button variant="ghost" size="icon" onclick={Window.Maximise}>
-      <Maximize />
+    <Button variant="ghost" size="icon" onclick={toggleMaximise}>
+      {#if maximized}
+        <Minimize />
+      {:else}
+        <Maximize />
+      {/if}
     </Button>
     <Button variant="ghost" size="icon" onclick={Window.Close}>
       <X />
