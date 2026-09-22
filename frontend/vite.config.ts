@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import path from "path";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import wails from "@wailsio/runtime/plugins/vite";
 import tailwindcss from "@tailwindcss/vite";
@@ -9,6 +10,11 @@ export default defineConfig({
     host: "127.0.0.1",
     port: Number(process.env.WAILS_VITE_PORT) || 9245,
     strictPort: true,
+  },
+  resolve: {
+    alias: {
+      $lib: path.resolve(__dirname, "./src/lib"),
+    },
   },
   plugins: [svelte(), wails("./bindings"), tailwindcss()],
 });
