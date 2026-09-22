@@ -23,7 +23,7 @@
 </script>
 
 <header
-  class="col-span-2 h-8 wails-drag border-b border-border/40 flex items-center justify-between pl-4"
+  class="col-span-2 h-8 wails-drag border-b border-border flex items-center justify-between pl-4 bg-secondary"
 >
   <div class="flex items-center gap-2 text-sm font-bold">Vlna</div>
   <div class="wails-no-drag flex">
