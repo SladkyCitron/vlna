@@ -28,6 +28,9 @@ frontend/.vite/
 .npm
 .eslintcache
 .node_repl_history
+frontend/src/lib/paraglide/
+frontend/src/project.inlang/*
+!frontend/src/project.inlang/settings.json
 
 # Tailwind
 frontend/public/tailwind.css

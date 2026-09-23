@@ -1,3 +1,4 @@
+import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { defineConfig } from "vite";
 import path from "path";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
@@ -16,5 +17,13 @@ export default defineConfig({
       $lib: path.resolve("./src/lib"),
     },
   },
-  plugins: [svelte(), wails("./bindings"), tailwindcss()],
+  plugins: [
+    svelte(),
+    wails("./bindings"),
+    tailwindcss(),
+    paraglideVitePlugin({
+      project: "./project.inlang",
+      outdir: "./src/lib/paraglide",
+    }),
+  ],
 });
