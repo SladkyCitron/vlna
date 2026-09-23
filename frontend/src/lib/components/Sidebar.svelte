@@ -1,10 +1,11 @@
 <script lang="ts">
   import { activeView, type View } from "$lib/stores/nav";
   import { Compass, Heart, Settings } from "@lucide/svelte";
+  import * as m from "$lib/paraglide/messages.js";
 
   const navItems: { id: View; label: string; icon: any }[] = [
-    { id: "explore", label: "Explore", icon: Compass },
-    { id: "favorites", label: "Favorites", icon: Heart },
+    { id: "explore", label: m.explore(), icon: Compass },
+    { id: "favorites", label: m.favorites(), icon: Heart },
   ];
 
   function setActiveView(view: View) {
@@ -19,7 +20,7 @@
     <div
       class="py-2 px-4 text-sm font-semibold text-muted-foreground tracking-wider"
     >
-      Library
+      {m.library()}
     </div>
     {#each navItems as item}
       <button
@@ -42,7 +43,7 @@
         onclick={() => setActiveView("settings")}
       >
         <Settings class="w-4 h-4" />
-        Settings
+        {m.settings()}
       </button>
     </div>
   </nav>

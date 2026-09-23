@@ -1,0 +1,7 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "library": "Knižnica",
+  "explore": "Objavovať",
+  "favorites": "Obľúbené",
+  "settings": "Nastavenia"
+}
