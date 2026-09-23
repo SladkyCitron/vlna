@@ -35,7 +35,7 @@
 <header
   class="col-span-2 h-8 wails-drag border-b border-border flex items-center justify-between pl-4 bg-popover select-none"
 >
-  <div class="flex items-center gap-2 text-xs font-bold text-muted-foreground">
+  <div class="flex items-center gap-2 text-sm font-bold text-foreground">
     Vlna
   </div>
 
