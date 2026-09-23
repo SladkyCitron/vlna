@@ -25,7 +25,7 @@
     {#each navItems as item}
       <button
         type="button"
-        class="w-full flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:outline-none"
+        class="w-full flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:outline-none text-foreground"
         class:bg-accent={item.id === $activeView}
         class:text-accent-foreground={item.id === $activeView}
         onclick={() => setActiveView(item.id)}
@@ -37,7 +37,7 @@
     <div class="border-t border-border mt-2 py-2">
       <button
         type="button"
-        class="w-full flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:outline-none"
+        class="w-full flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:outline-none text-foreground"
         class:bg-accent={"settings" === $activeView}
         class:text-accent-foreground={"settings" === $activeView}
         onclick={() => setActiveView("settings")}
