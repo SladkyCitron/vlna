@@ -14,35 +14,35 @@
 </script>
 
 <aside
-  class="w-60 border-r border-border p-3 flex flex-col justify-between shrink-0"
+  class="border-border flex w-60 shrink-0 flex-col justify-between border-r p-3"
 >
   <nav class="space-y-1">
     <div
-      class="py-2 px-4 text-sm font-semibold text-muted-foreground tracking-wider"
+      class="text-muted-foreground px-4 py-2 text-sm font-semibold tracking-wider"
     >
       {m.library()}
     </div>
     {#each navItems as item}
       <button
         type="button"
-        class="w-full flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:outline-none text-foreground"
+        class="hover:bg-accent hover:text-accent-foreground text-foreground flex w-full items-center gap-2 rounded-md px-4 py-2 text-sm font-medium focus:outline-none"
         class:bg-accent={item.id === $activeView}
         class:text-accent-foreground={item.id === $activeView}
         onclick={() => setActiveView(item.id)}
       >
-        <svelte:component this={item.icon} class="w-4 h-4" />
+        <svelte:component this={item.icon} class="h-4 w-4" />
         {item.label}
       </button>
     {/each}
-    <div class="border-t border-border mt-2 py-2">
+    <div class="border-border mt-2 border-t py-2">
       <button
         type="button"
-        class="w-full flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:outline-none text-foreground"
+        class="hover:bg-accent hover:text-accent-foreground text-foreground flex w-full items-center gap-2 rounded-md px-4 py-2 text-sm font-medium focus:outline-none"
         class:bg-accent={"settings" === $activeView}
         class:text-accent-foreground={"settings" === $activeView}
         onclick={() => setActiveView("settings")}
       >
-        <Settings class="w-4 h-4" />
+        <Settings class="h-4 w-4" />
         {m.settings()}
       </button>
     </div>

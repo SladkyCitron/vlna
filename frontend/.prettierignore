@@ -1,0 +1,6 @@
+build
+coverage
+bindings
+dist
+node_modules
+src/lib/paraglide

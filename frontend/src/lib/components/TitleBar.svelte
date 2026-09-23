@@ -12,7 +12,7 @@
     const unoff = Events.On("wails:window:maximise", () => (maximized = true));
     const unoffRestore = Events.On(
       "wails:window:unmaximise",
-      () => (maximized = false),
+      () => (maximized = false)
     );
 
     return () => {
@@ -33,16 +33,16 @@
 </script>
 
 <header
-  class="col-span-2 h-8 wails-drag border-b border-border flex items-center justify-between pl-4 bg-popover select-none"
+  class="wails-drag border-border bg-popover col-span-2 flex h-8 items-center justify-between border-b pl-4 select-none"
 >
-  <div class="flex items-center gap-2 text-sm font-bold text-foreground">
+  <div class="text-foreground flex items-center gap-2 text-sm font-bold">
     Vlna
   </div>
 
   <div class="wails-no-drag flex h-full items-center">
     <Button
       variant="ghost"
-      class="h-8 w-11 rounded-none hover:bg-accent focus-visible:ring-0"
+      class="hover:bg-accent h-8 w-11 rounded-none focus-visible:ring-0"
       onclick={Window.Minimise}
     >
       <Minus class="h-3.5 w-3.5" strokeWidth={1.5} />
@@ -50,7 +50,7 @@
 
     <Button
       variant="ghost"
-      class="h-8 w-11 rounded-none hover:bg-accent focus-visible:ring-0"
+      class="hover:bg-accent h-8 w-11 rounded-none focus-visible:ring-0"
       onclick={toggleMaximise}
     >
       {#if maximized}
@@ -62,7 +62,7 @@
 
     <Button
       variant="ghost"
-      class="h-8 w-11 rounded-none hover:bg-destructive hover:text-destructive-foreground focus-visible:ring-0"
+      class="hover:bg-destructive hover:text-destructive-foreground h-8 w-11 rounded-none focus-visible:ring-0"
       onclick={Window.Close}
     >
       <X class="h-4 w-4" strokeWidth={1.5} />

@@ -17,9 +17,9 @@
     "baseUrl": ".",
     "paths": {
       "$lib": ["./src/lib"],
-      "$lib/*": ["./src/lib/*"],
-    },
+      "$lib/*": ["./src/lib/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "bindings"],
-  "exclude": ["src/lib/paraglide/*.js"],
+  "exclude": ["src/lib/paraglide/*.js"]
 }
