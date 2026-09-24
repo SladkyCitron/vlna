@@ -2,6 +2,7 @@
   import TitleBar from "$lib/components/TitleBar.svelte";
   import Sidebar from "$lib/components/Sidebar.svelte";
   import Explore from "$lib/components/views/Explore.svelte";
+  import Settings from "$lib/components/views/Settings.svelte";
   import { activeView } from "$lib/stores/nav";
 </script>
 
@@ -25,9 +26,7 @@
           <h1 class="text-xl font-bold">Favorites TODO</h1>
         </div>
       {:else if $activeView === "settings"}
-        <div>
-          <h1 class="text-xl font-bold">Settings TODO</h1>
-        </div>
+        <Settings />
       {/if}
     </main>
   </div>
