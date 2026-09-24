@@ -4,10 +4,12 @@
   import Explore from "$lib/components/views/Explore.svelte";
   import Settings from "$lib/components/views/Settings.svelte";
   import { activeView } from "$lib/stores/nav";
+  import { isDark } from "$lib/stores/theme";
 </script>
 
 <div
-  class="dark bg-background text-foreground grid h-screen w-screen grid-cols-[240px_1fr] grid-rows-[auto_1fr_auto] overflow-hidden select-none"
+  class:dark={$isDark}
+  class="bg-background text-foreground grid h-screen w-screen grid-cols-[240px_1fr] grid-rows-[auto_1fr_auto] overflow-hidden select-none"
 >
   <TitleBar />
 

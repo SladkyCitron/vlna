@@ -24,6 +24,7 @@ func main() {
 		Description: "Internet radio player",
 		Services: []application.Service{
 			application.NewService(service.NewIPInfoService()),
+			application.NewService(service.NewConfigService()),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

@@ -4,5 +4,9 @@
   "explore": "Objavovať",
   "search": "Hľadať",
   "favorites": "Obľúbené",
-  "settings": "Nastavenia"
+  "settings": "Nastavenia",
+  "settings.theme": "Motív",
+  "settings.theme.description": "Vyberte si medzi svetlým alebo tmavým motívom.",
+  "settings.theme.light": "Svetlý",
+  "settings.theme.dark": "Tmavý"
 }

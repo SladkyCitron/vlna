@@ -4,5 +4,9 @@
   "explore": "Explore",
   "search": "Search",
   "favorites": "Favorites",
-  "settings": "Settings"
+  "settings": "Settings",
+  "settings.theme": "Theme",
+  "settings.theme.description": "Choose between light or dark theme.",
+  "settings.theme.light": "Light",
+  "settings.theme.dark": "Dark"
 }
