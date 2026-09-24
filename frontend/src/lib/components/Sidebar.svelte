@@ -1,10 +1,11 @@
 <script lang="ts">
   import { activeView, type View } from "$lib/stores/nav";
-  import { Compass, Heart, Settings } from "@lucide/svelte";
+  import { Compass, Search, Heart, Settings } from "@lucide/svelte";
   import * as m from "$lib/paraglide/messages.js";
 
   const navItems: { id: View; label: string; icon: any }[] = [
     { id: "explore", label: m.explore(), icon: Compass },
+    { id: "search", label: m.search(), icon: Search },
     { id: "favorites", label: m.favorites(), icon: Heart },
   ];
 

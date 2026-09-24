@@ -17,6 +17,10 @@
         <div>
           <h1 class="text-xl font-bold">Explore TODO</h1>
         </div>
+      {:else if $activeView === "search"}
+        <div>
+          <h1 class="text-xl font-bold">Search TODO</h1>
+        </div>
       {:else if $activeView === "favorites"}
         <div>
           <h1 class="text-xl font-bold">Favorites TODO</h1>

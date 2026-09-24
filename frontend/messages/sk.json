@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "library": "Knižnica",
   "explore": "Objavovať",
+  "search": "Hľadať",
   "favorites": "Obľúbené",
   "settings": "Nastavenia"
 }
