@@ -8,6 +8,7 @@ import (
 	"log"
 
 	"github.com/SladkyCitron/slogcolor"
+	"github.com/SladkyCitron/vlna/service"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -21,7 +22,9 @@ func main() {
 	app := application.New(application.Options{
 		Name:        "Vlna",
 		Description: "Internet radio player",
-		Services:    []application.Service{},
+		Services: []application.Service{
+			application.NewService(service.NewIPInfoService()),
+		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),
 		},

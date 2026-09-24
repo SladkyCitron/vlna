@@ -1,6 +1,7 @@
 <script lang="ts">
   import TitleBar from "$lib/components/TitleBar.svelte";
   import Sidebar from "$lib/components/Sidebar.svelte";
+  import Explore from "$lib/components/views/Explore.svelte";
   import { activeView } from "$lib/stores/nav";
 </script>
 
@@ -14,9 +15,7 @@
 
     <main class="flex-1 overflow-y-auto p-4">
       {#if $activeView === "explore"}
-        <div>
-          <h1 class="text-xl font-bold">Explore TODO</h1>
-        </div>
+        <Explore />
       {:else if $activeView === "search"}
         <div>
           <h1 class="text-xl font-bold">Search TODO</h1>
