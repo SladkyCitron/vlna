@@ -8,5 +8,6 @@
   "settings.theme": "Motív",
   "settings.theme.description": "Vyberte si medzi svetlým alebo tmavým motívom.",
   "settings.theme.light": "Svetlý",
-  "settings.theme.dark": "Tmavý"
+  "settings.theme.dark": "Tmavý",
+  "loading": "Načítava sa..."
 }

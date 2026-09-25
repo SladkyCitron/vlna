@@ -25,6 +25,7 @@ func main() {
 		Services: []application.Service{
 			application.NewService(service.NewIPInfoService()),
 			application.NewService(service.NewConfigService()),
+			application.NewService(service.NewStationService()),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

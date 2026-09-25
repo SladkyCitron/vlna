@@ -8,5 +8,6 @@
   "settings.theme": "Theme",
   "settings.theme.description": "Choose between light or dark theme.",
   "settings.theme.light": "Light",
-  "settings.theme.dark": "Dark"
+  "settings.theme.dark": "Dark",
+  "loading": "Loading..."
 }
