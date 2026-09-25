@@ -18,6 +18,18 @@
         ipInfo = info;
       });
   });
+
+  function getLocalizedCountryName(countryCode: string): string {
+    try {
+      const displayNames = new Intl.DisplayNames([navigator.language], {
+        type: "region",
+      });
+      return displayNames.of(countryCode) || countryCode;
+    } catch (error) {
+      console.error("Error getting localized country name:", error);
+      return countryCode;
+    }
+  }
 </script>
 
 <div>
@@ -25,7 +37,7 @@
   <Badge variant="secondary" class="flex items-center gap-2">
     {#if ipInfo}
       <MapPin class="h-4 w-4" />
-      {ipInfo.cityName}, {ipInfo.countryName}
+      {ipInfo.cityName}, {getLocalizedCountryName(ipInfo.countryCode)}
     {:else}
       <LoaderCircle class="h-4 w-4 animate-spin" />
     {/if}
