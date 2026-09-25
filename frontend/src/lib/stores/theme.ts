@@ -3,11 +3,11 @@ import { ConfigService } from "$bindings/github.com/SladkyCitron/vlna/service";
 
 export type Theme = "light" | "dark";
 
-function isTheme(value: string): value is Theme {
+function isValidTheme(value: string): value is Theme {
   return value === "light" || value === "dark";
 }
 
-export const theme = writable<Theme>("dark");
+export const theme = writable<Theme>(undefined);
 
 let configLoaded = false;
 theme.subscribe((value) => {
@@ -18,11 +18,15 @@ theme.subscribe((value) => {
   ConfigService.SetTheme(value).catch((error) => {
     console.error("Failed to save theme:", error);
   });
+
+  ConfigService.SaveConfig().catch((error) => {
+    console.error("Failed to save config:", error);
+  });
 });
 
 ConfigService.GetConfig()
   .then((config) => {
-    if (config && isTheme(config.theme)) {
+    if (config && isValidTheme(config.theme)) {
       theme.set(config.theme);
     }
     configLoaded = true;
