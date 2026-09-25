@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"encoding/json"
+	"encoding/json/v2"
 	"fmt"
 	"net/http"
 	"time"
@@ -68,7 +68,7 @@ func (s *IPInfoService) Fetch() (*IPInfo, error) {
 	}
 
 	var ipInfo IPInfo
-	if err := json.NewDecoder(resp.Body).Decode(&ipInfo); err != nil {
+	if err := json.UnmarshalRead(resp.Body, &ipInfo); err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
