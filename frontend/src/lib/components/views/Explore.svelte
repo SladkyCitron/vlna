@@ -65,12 +65,7 @@
       {#each stations as station}
         <Item.Root variant="outline">
           {#snippet child({ props })}
-            <a
-              href={station.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              {...props}
-            >
+            <a href="#/" {...props}>
               <Item.Media variant="image">
                 {#if station.favicon}
                   <img
