@@ -1,7 +1,9 @@
 <script lang="ts">
   import { Badge } from "$lib/components/ui/badge";
   import * as Item from "$lib/components/ui/item";
-  import { MapPin, LoaderCircle, Radio } from "@lucide/svelte";
+  import * as ButtonGroup from "$lib/components/ui/button-group";
+  import { Button } from "$lib/components/ui/button";
+  import { MapPin, LoaderCircle, Radio, Heart, Play } from "@lucide/svelte";
   import {
     IPInfoService,
     type IPInfo,
@@ -62,25 +64,44 @@
     <div class="flex flex-col gap-4">
       {#each stations as station}
         <Item.Root variant="outline">
-          <Item.Media variant="image">
-            {#if station.favicon}
-              <img src={station.favicon} alt={station.name} class="size-16" />
-            {:else}
-              <Radio class="size-8" aria-label={station.name} />
-            {/if}
-          </Item.Media>
-          <Item.Content>
-            <Item.Title>{station.name}</Item.Title>
-            <Item.Description>
-              {getLocalizedCountryName(station.countrycode)}
-              {#if station.tags}
-                | {station.tags
-                  .split(",")
-                  .slice(0, 4) // limit to first 5 tags only
-                  .join(", ")}
-              {/if}
-            </Item.Description>
-          </Item.Content>
+          {#snippet child({ props })}
+            <a
+              href={station.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              {...props}
+            >
+              <Item.Media variant="image">
+                {#if station.favicon}
+                  <img
+                    src={station.favicon}
+                    alt={station.name}
+                    class="size-16"
+                  />
+                {:else}
+                  <Radio class="size-8" aria-label={station.name} />
+                {/if}
+              </Item.Media>
+              <Item.Content>
+                <Item.Title>{station.name}</Item.Title>
+                <Item.Description>
+                  {getLocalizedCountryName(station.countrycode)}
+                  {#if station.tags}
+                    | {station.tags
+                      .split(",")
+                      .slice(0, 4) // limit to first 5 tags only
+                      .join(", ")}
+                  {/if}
+                </Item.Description>
+              </Item.Content>
+              <Item.Actions>
+                <ButtonGroup.Root>
+                  <Button variant="outline"><Heart /></Button>
+                  <Button variant="outline"><Play /></Button>
+                </ButtonGroup.Root>
+              </Item.Actions>
+            </a>
+          {/snippet}
         </Item.Root>
       {/each}
     </div>
