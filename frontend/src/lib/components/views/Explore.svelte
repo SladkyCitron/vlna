@@ -31,6 +31,11 @@
 
   // fetch stations
   let stations: Stations = [];
+
+  function stopStationDetails(event: MouseEvent) {
+    event.stopPropagation();
+  }
+
   onMount(() => {
     const fetchExploreData = async () => {
       try {
@@ -92,8 +97,12 @@
               </Item.Content>
               <Item.Actions>
                 <ButtonGroup.Root>
-                  <Button variant="outline"><Heart /></Button>
-                  <Button variant="outline"><Play /></Button>
+                  <Button variant="outline" onclick={stopStationDetails}>
+                    <Heart />
+                  </Button>
+                  <Button variant="outline" onclick={stopStationDetails}>
+                    <Play />
+                  </Button>
                 </ButtonGroup.Root>
               </Item.Actions>
             </a>
