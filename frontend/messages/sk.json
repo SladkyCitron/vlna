@@ -9,5 +9,6 @@
   "settings.theme.description": "Vyberte si medzi svetlým alebo tmavým motívom.",
   "settings.theme.light": "Svetlý",
   "settings.theme.dark": "Tmavý",
-  "loading": "Načítava sa..."
+  "loading": "Načítava sa...",
+  "stationDetails": "Podrobnosti stanice"
 }

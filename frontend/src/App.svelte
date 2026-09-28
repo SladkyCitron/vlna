@@ -1,14 +1,18 @@
 <script lang="ts">
   import TitleBar from "$lib/components/TitleBar.svelte";
   import Sidebar from "$lib/components/Sidebar.svelte";
+  import StationDetails from "$lib/components/StationDetails.svelte";
   import Explore from "$lib/components/views/Explore.svelte";
   import Settings from "$lib/components/views/Settings.svelte";
   import { activeView } from "$lib/stores/nav";
   import { isDark } from "$lib/stores/theme";
+
+  $: if (typeof document !== "undefined") {
+    document.documentElement.classList.toggle("dark", $isDark);
+  }
 </script>
 
 <div
-  class:dark={$isDark}
   class="bg-background text-foreground grid h-screen w-screen grid-cols-[240px_1fr] grid-rows-[auto_1fr_auto] overflow-hidden select-none"
 >
   <TitleBar />
@@ -33,3 +37,5 @@
     </main>
   </div>
 </div>
+
+<StationDetails />

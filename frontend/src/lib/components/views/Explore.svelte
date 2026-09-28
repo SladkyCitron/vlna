@@ -10,6 +10,7 @@
     StationService,
     type Stations,
   } from "$bindings/github.com/SladkyCitron/vlna/service";
+  import { openStationDetails } from "$lib/stores/stationDetails";
   import * as m from "$lib/paraglide/messages.js";
   import { onMount } from "svelte";
 
@@ -65,7 +66,7 @@
       {#each stations as station}
         <Item.Root variant="outline">
           {#snippet child({ props })}
-            <a href="#/" {...props}>
+            <a href="#/" onclick={() => openStationDetails(station)} {...props}>
               <Item.Media variant="image">
                 {#if station.favicon}
                   <img
