@@ -16,6 +16,7 @@ linters:
         - (*bytes.Buffer).Write
         - (*bytes.Buffer).WriteByte
         - (*bytes.Buffer).WriteString
+        - (*http.Response).Body.Close
 
     misspell:
       locale: US
