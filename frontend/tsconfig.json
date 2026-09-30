@@ -20,9 +20,9 @@
       "$lib": ["./src/lib"],
       "$lib/*": ["./src/lib/*"],
       "$bindings": ["./bindings"],
-      "$bindings/*": ["./bindings/*"],
-    },
+      "$bindings/*": ["./bindings/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "bindings"],
-  "exclude": ["src/lib/paraglide/**/*"],
+  "exclude": ["src/lib/paraglide/**/*"]
 }
