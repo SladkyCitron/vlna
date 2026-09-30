@@ -39,8 +39,10 @@ jobs:
           go mod tidy -v
           git diff --exit-code go.mod go.sum
 
-      - name: Create empty frontend/dist directory
-        run: mkdir -p frontend/dist
+      - name: Create dummy frontend/dist directory
+        run: |
+          mkdir -p frontend/dist
+          touch frontend/dist/dummy
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
