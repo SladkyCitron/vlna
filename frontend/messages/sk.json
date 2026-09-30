@@ -10,5 +10,19 @@
   "settings.theme.light": "Svetlý",
   "settings.theme.dark": "Tmavý",
   "loading": "Načítava sa...",
-  "stationDetails": "Podrobnosti stanice"
+  "stationDetails": "Podrobnosti stanice",
+  "url": "URL",
+  "homepage": "Domovská stránka",
+  "tags": "Značky",
+  "country": "Krajina",
+  "countrycode": "Kód krajiny",
+  "state": "Kraj / Štát",
+  "languages": "Jazyky",
+  "languagecodes": "Kódy jazykov",
+  "votes": "Hlasy",
+  "codec": "Kódek",
+  "bitrate": "Bitový tok",
+  "hls": "HLS",
+  "yes": "Áno",
+  "no": "Nie"
 }

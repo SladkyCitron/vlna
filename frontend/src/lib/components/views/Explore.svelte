@@ -11,23 +11,12 @@
     type Stations,
   } from "$bindings/github.com/SladkyCitron/vlna/service";
   import { openStationDetails } from "$lib/stores/stationDetails";
+  import { getLocalizedCountryName } from "$lib/utils";
   import * as m from "$lib/paraglide/messages.js";
   import { onMount } from "svelte";
 
   // fetch IP info for location
   let ipInfo: IPInfo | null = null;
-
-  function getLocalizedCountryName(countryCode: string): string {
-    try {
-      const displayNames = new Intl.DisplayNames([navigator.language], {
-        type: "region",
-      });
-      return displayNames.of(countryCode) || countryCode;
-    } catch (error) {
-      console.error("Error getting localized country name:", error);
-      return countryCode;
-    }
-  }
 
   // fetch stations
   let stations: Stations = [];

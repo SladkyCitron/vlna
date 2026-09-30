@@ -10,5 +10,19 @@
   "settings.theme.light": "Light",
   "settings.theme.dark": "Dark",
   "loading": "Loading...",
-  "stationDetails": "Station Details"
+  "stationDetails": "Station Details",
+  "url": "URL",
+  "homepage": "Homepage",
+  "tags": "Tags",
+  "country": "Country",
+  "countrycode": "Country Code",
+  "state": "State",
+  "languages": "Languages",
+  "languagecodes": "Language Codes",
+  "votes": "Votes",
+  "codec": "Codec",
+  "bitrate": "Bitrate",
+  "hls": "HLS",
+  "yes": "Yes",
+  "no": "No"
 }
