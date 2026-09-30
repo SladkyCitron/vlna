@@ -29,7 +29,9 @@ jobs:
           cache: true
 
       - name: Install dependencies
-        run: go mod download
+        run: |
+          go mod download
+          apt update && apt install -y build-essential pkg-config libgtk-4-dev libwebkitgtk-6.0-dev
 
       - name: Verify go.mod is tidy
         run: |
