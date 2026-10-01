@@ -103,6 +103,7 @@ func (s *StationService) GetStationsByCountryCode(countryCode string) (Stations,
 	if err != nil {
 		return nil, fmt.Errorf("network request failed: %w", err)
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
