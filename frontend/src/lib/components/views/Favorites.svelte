@@ -1,76 +1,44 @@
 <script lang="ts">
-  import { Badge } from "$lib/components/ui/badge";
   import * as Item from "$lib/components/ui/item";
   import * as ButtonGroup from "$lib/components/ui/button-group";
   import { Button } from "$lib/components/ui/button";
-  import { MapPin, LoaderCircle, Radio, Heart, Play } from "@lucide/svelte";
-  import {
-    IPInfoService,
-    type IPInfo,
-    StationService,
-    type Station,
-    type Stations,
-  } from "$bindings/github.com/SladkyCitron/vlna/service";
-  import { openStationDetails } from "$lib/stores/stationDetails";
-  import { getLocalizedCountryName } from "$lib/utils";
-  import * as m from "$lib/paraglide/messages.js";
+  import { LoaderCircle, Radio, Heart, Play } from "@lucide/svelte";
   import { onMount } from "svelte";
+  import type { Station } from "$bindings/github.com/SladkyCitron/vlna/service";
+  import { openStationDetails } from "$lib/stores/stationDetails";
   import {
     favorites,
+    favoritesLoading,
     loadFavorites,
     toggleFavorite,
   } from "$lib/stores/favorites";
-
-  // fetch IP info for location
-  let ipInfo: IPInfo | null = null;
-
-  // fetch stations
-  let stations: Stations = [];
+  import { getLocalizedCountryName } from "$lib/utils";
+  import * as m from "$lib/paraglide/messages.js";
 
   function stopStationDetails(event: MouseEvent) {
     event.stopPropagation();
   }
 
-  function toggleStationFavorite(event: MouseEvent, station: Station) {
+  function removeFavorite(event: MouseEvent, station: Station) {
     stopStationDetails(event);
     toggleFavorite(station);
   }
 
   onMount(() => {
     void loadFavorites();
-
-    const fetchExploreData = async () => {
-      try {
-        ipInfo = await IPInfoService.Fetch();
-        if (!ipInfo) {
-          return;
-        }
-
-        stations = await StationService.GetStationsByCountryCode(
-          ipInfo.countryCode
-        );
-      } catch (error) {
-        console.error("Failed to fetch Explore data:", error);
-      }
-    };
-
-    void fetchExploreData();
   });
 </script>
 
 <div>
-  <h1 class="pb-4 text-xl font-bold">{m.explore()}</h1>
-  <Badge variant="secondary" class="mb-4 flex items-center gap-2">
-    {#if ipInfo}
-      <MapPin class="h-4 w-4" />
-      {ipInfo.cityName}, {getLocalizedCountryName(ipInfo.countryCode)}
-    {:else}
-      <LoaderCircle class="h-4 w-4 animate-spin" />
-    {/if}
-  </Badge>
-  {#if stations}
+  <h1 class="pb-4 text-xl font-bold">{m.favorites()}</h1>
+  {#if $favoritesLoading}
+    <div class="flex items-center justify-center">
+      <LoaderCircle class="h-8 w-8 animate-spin" />
+      <p class="ml-2">{m.loading()}</p>
+    </div>
+  {:else}
     <div class="flex flex-col gap-4">
-      {#each stations as station}
+      {#each $favorites as station}
         <Item.Root variant="outline">
           {#snippet child({ props })}
             <a href="#/" onclick={() => openStationDetails(station)} {...props}>
@@ -101,16 +69,9 @@
                 <ButtonGroup.Root>
                   <Button
                     variant="outline"
-                    onclick={(event) => toggleStationFavorite(event, station)}
+                    onclick={(event) => removeFavorite(event, station)}
                   >
-                    <Heart
-                      fill={($favorites ?? []).some(
-                        (favorite) =>
-                          favorite.stationuuid === station.stationuuid
-                      )
-                        ? "currentColor"
-                        : "none"}
-                    />
+                    <Heart fill="currentColor" />
                   </Button>
                   <Button variant="outline" onclick={stopStationDetails}>
                     <Play />
@@ -121,11 +82,6 @@
           {/snippet}
         </Item.Root>
       {/each}
-    </div>
-  {:else}
-    <div class="flex items-center justify-center">
-      <LoaderCircle class="h-8 w-8 animate-spin" />
-      <p class="ml-2">{m.loading()}</p>
     </div>
   {/if}
 </div>

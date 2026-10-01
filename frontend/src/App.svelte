@@ -3,6 +3,7 @@
   import Sidebar from "$lib/components/Sidebar.svelte";
   import StationDetails from "$lib/components/StationDetails.svelte";
   import Explore from "$lib/components/views/Explore.svelte";
+  import Favorites from "$lib/components/views/Favorites.svelte";
   import Settings from "$lib/components/views/Settings.svelte";
   import { activeView } from "$lib/stores/nav";
   import { isDark } from "$lib/stores/theme";
@@ -28,9 +29,7 @@
           <h1 class="text-xl font-bold">Search TODO</h1>
         </div>
       {:else if $activeView === "favorites"}
-        <div>
-          <h1 class="text-xl font-bold">Favorites TODO</h1>
-        </div>
+        <Favorites />
       {:else if $activeView === "settings"}
         <Settings />
       {/if}

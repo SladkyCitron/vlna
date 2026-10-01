@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"fmt"
+	"log/slog"
+	"net/http"
 	"os"
 	"path/filepath"
 
@@ -11,7 +14,8 @@ import (
 )
 
 type Config struct {
-	Theme string `json:"theme"`
+	Theme     string   `json:"theme"`
+	Favorites []string `json:"favorites"`
 }
 
 var defaultConfig = &Config{
@@ -48,6 +52,7 @@ func (s *ConfigService) ServiceStartup(ctx context.Context, options application.
 
 	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
 		// config file does not exist, create one with defaults
+		slog.Warn("Config does not exist, creating one with default values", "path", configFilePath)
 		if err := os.MkdirAll(configDirPath, 0755); err != nil {
 			return err
 		}
@@ -65,6 +70,8 @@ func (s *ConfigService) ServiceStartup(ctx context.Context, options application.
 
 		return nil
 	}
+
+	slog.Info("Config exists, loading values", "path", configFilePath)
 
 	b, err := os.ReadFile(configFilePath)
 	if err != nil {
@@ -84,6 +91,8 @@ func (s *ConfigService) SaveConfig() error {
 		return err
 	}
 
+	slog.Info("Saving config", "path", configFilePath)
+
 	file, err := os.Create(configFilePath)
 	if err != nil {
 		return err
@@ -99,6 +108,52 @@ func (s *ConfigService) SaveConfig() error {
 
 func (s *ConfigService) GetConfig() *Config {
 	return s.cfg
+}
+
+func (s *ConfigService) GetFavorites() (Stations, error) {
+	if len(s.cfg.Favorites) == 0 {
+		return Stations{}, nil
+	}
+
+	stations := make(Stations, 0, len(s.cfg.Favorites))
+	for _, favorite := range s.cfg.Favorites {
+		req, err := http.NewRequest(
+			http.MethodGet,
+			radioBrowserURL+"/json/stations/byuuid/"+favorite,
+			nil,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create network request for favorite %q: %w", favorite, err)
+		}
+		req.Header.Set("User-Agent", getUserAgent())
+
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			return nil, fmt.Errorf("network request failed for favorite %q: %w", favorite, err)
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			resp.Body.Close()
+			return nil, fmt.Errorf("unexpected status code for favorite %q: %d", favorite, resp.StatusCode)
+		}
+
+		var favoriteStations Stations
+		err = json.UnmarshalRead(resp.Body, &favoriteStations)
+		resp.Body.Close()
+		if err != nil {
+			return nil, fmt.Errorf("failed to decode response for favorite %q: %w", favorite, err)
+		}
+		stations = append(stations, favoriteStations...)
+	}
+
+	return stations, nil
+}
+
+func (s *ConfigService) SetFavorites(favorites Stations) {
+	s.cfg.Favorites = make([]string, len(favorites))
+	for i, station := range favorites {
+		s.cfg.Favorites[i] = station.StationUUID
+	}
 }
 
 func (s *ConfigService) SetTheme(theme string) {
