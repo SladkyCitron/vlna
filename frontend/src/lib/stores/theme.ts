@@ -1,4 +1,4 @@
-import { derived, writable } from "svelte/store";
+import { writable } from "svelte/store";
 import { ConfigService } from "$bindings/github.com/SladkyCitron/vlna/service";
 
 export type Theme = "light" | "dark";
@@ -35,5 +35,3 @@ ConfigService.GetConfig()
     configLoaded = true;
     console.error("Failed to load theme:", error);
   });
-
-export const isDark = derived(theme, ($theme) => $theme === "dark");

@@ -6,10 +6,10 @@
   import Favorites from "$lib/components/views/Favorites.svelte";
   import Settings from "$lib/components/views/Settings.svelte";
   import { activeView } from "$lib/stores/nav";
-  import { isDark } from "$lib/stores/theme";
+  import { theme } from "$lib/stores/theme";
 
   $: if (typeof document !== "undefined") {
-    document.documentElement.classList.toggle("dark", $isDark);
+    document.documentElement.setAttribute("data-theme", $theme ?? "light");
   }
 </script>
 
