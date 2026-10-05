@@ -1,13 +1,11 @@
 [Desktop Entry]
 Version=1.0
-Name=My Product
-Comment=A vlna application
+Name=Vlna
+Comment=Internet radio player
 # The Exec line includes %u to pass the URL to the application
 Exec=/usr/local/bin/vlna %u
 Terminal=false
 Type=Application
 Icon=vlna
-Categories=Utility;
+Categories=AudioVideo;Player;Audio;Music;
 StartupWMClass=vlna
-
- 
