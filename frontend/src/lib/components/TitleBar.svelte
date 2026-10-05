@@ -34,6 +34,9 @@
 
 <header
   class="wails-drag border-border bg-popover col-span-2 flex h-8 items-center justify-between border-b pl-2 select-none"
+  role="group"
+  aria-label="Window title bar"
+  ondblclick={toggleMaximise}
 >
   <div class="text-foreground flex items-center gap-2 text-sm font-bold">
     <img src="/icon.svg" alt="Vlna Icon" class="h-4 w-4" />
