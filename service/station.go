@@ -13,7 +13,7 @@ import (
 const radioBrowserURL = "https://de1.api.radio-browser.info"
 
 func getUserAgent() string {
-	version := application.BuildInfo.Main.Version
+	version := "" // TODO: Replace with actual version if available
 	if version == "" {
 		version = "0.0.0-dev"
 	}
