@@ -4,6 +4,7 @@
   import StationDetails from "$lib/components/StationDetails.svelte";
   import Explore from "$lib/components/views/Explore.svelte";
   import Favorites from "$lib/components/views/Favorites.svelte";
+  import Search from "$lib/components/views/Search.svelte";
   import Settings from "$lib/components/views/Settings.svelte";
   import { activeView } from "$lib/stores/nav";
   import { theme } from "$lib/stores/theme";
@@ -25,9 +26,7 @@
       {#if $activeView === "explore"}
         <Explore />
       {:else if $activeView === "search"}
-        <div>
-          <h1 class="text-xl font-bold">Search TODO</h1>
-        </div>
+        <Search />
       {:else if $activeView === "favorites"}
         <Favorites />
       {:else if $activeView === "settings"}

@@ -5,6 +5,7 @@ import (
 	"encoding/json/v2"
 	"fmt"
 	"net/http"
+	"net/url"
 	"runtime"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
@@ -92,6 +93,40 @@ func (s *StationService) GetStationsByCountryCode(countryCode string) (Stations,
 		s.ctx,
 		http.MethodGet,
 		radioBrowserURL+"/json/stations/bycountrycodeexact/"+countryCode+"?order=votes&limit=100",
+		nil,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create network request: %w", err)
+	}
+	req.Header.Set("User-Agent", getUserAgent())
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("network request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+
+	var stations Stations
+	if err := json.UnmarshalRead(resp.Body, &stations); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	return stations, nil
+}
+
+// GetStationsByName fetches a list of stations filtered by the given name,
+// limited to a maximum of 100 stations.
+//
+// It is used for the Search page.
+func (s *StationService) GetStationsByName(name string) (Stations, error) {
+	req, err := http.NewRequestWithContext(
+		s.ctx,
+		http.MethodGet,
+		radioBrowserURL+"/json/stations/search?name="+url.QueryEscape(name)+"&order=votes&limit=100",
 		nil,
 	)
 	if err != nil {
