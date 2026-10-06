@@ -8,6 +8,7 @@
   import { onMount } from "svelte";
   import {
     type Stations,
+    type Station,
     StationService,
   } from "$bindings/github.com/SladkyCitron/vlna/service";
   import { openStationDetails } from "$lib/stores/stationDetails";
