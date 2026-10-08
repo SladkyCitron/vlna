@@ -11,7 +11,8 @@ import (
 	"time"
 
 	"github.com/SladkyCitron/resona/afmt"
-	"github.com/SladkyCitron/resona/audio"
+	"github.com/SladkyCitron/resona/aio"
+	"github.com/SladkyCitron/resona/effect"
 	"github.com/SladkyCitron/resona/freq"
 	"github.com/SladkyCitron/resona/playback"
 	_ "github.com/SladkyCitron/resona/playback/driver/oto"
@@ -24,7 +25,8 @@ import (
 type PlayerService struct {
 	playbackCtx *playback.Context
 	player      *playback.Player
-	source      *audio.Source
+	gain        *effect.Gain
+	pausable    *aio.PausableReader
 	curBody     io.ReadCloser
 	cancel      context.CancelFunc
 	ctx         context.Context
@@ -33,7 +35,9 @@ type PlayerService struct {
 }
 
 func NewPlayerService() *PlayerService {
-	return &PlayerService{}
+	return &PlayerService{
+		gain: &effect.Gain{Gain: -0.25},
+	}
 }
 
 func (s *PlayerService) ServiceStartup(ctx context.Context, options application.ServiceOptions) error {
@@ -140,8 +144,8 @@ func (s *PlayerService) Play(url string) error {
 		return fmt.Errorf("failed to decode MP3: %w", err)
 	}
 
-	s.source = audio.NewSource(deco)
-	s.player = s.playbackCtx.NewPlayer(s.source)
+	s.pausable = aio.NewPausableReader(effect.Reader(deco, s.gain))
+	s.player = s.playbackCtx.NewPlayer(s.pausable)
 	s.player.Play()
 
 	return nil
@@ -151,8 +155,8 @@ func (s *PlayerService) Pause() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if s.source != nil {
-		s.source.Pause()
+	if s.pausable != nil {
+		s.pausable.Pause()
 	}
 }
 
@@ -160,8 +164,8 @@ func (s *PlayerService) Resume() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if s.source != nil {
-		s.source.Resume()
+	if s.pausable != nil {
+		s.pausable.Resume()
 	}
 }
 
@@ -169,9 +173,8 @@ func (s *PlayerService) SetVolume(gain float64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if s.source != nil {
-		s.source.SetVolume(gain)
-	}
+	s.gain.Gain = gain - 1
+	slog.Info("Volume set", "gain", gain, "actualGain", s.gain.Gain)
 }
 
 func (s *PlayerService) Stop() {
@@ -194,5 +197,5 @@ func (s *PlayerService) stopInternal() {
 		s.player.Stop()
 		s.player = nil
 	}
-	s.source = nil
+	s.pausable = nil
 }
