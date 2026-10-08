@@ -1,3 +1,5 @@
+import { getLocale } from "$lib/paraglide/runtime.js";
+
 export { cn } from "cn";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,7 +15,7 @@ export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & {
 
 export function getLocalizedCountryName(countryCode: string): string {
   try {
-    const displayNames = new Intl.DisplayNames([navigator.language], {
+    const displayNames = new Intl.DisplayNames([getLocale()], {
       type: "region",
     });
     return displayNames.of(countryCode) || countryCode;
@@ -25,7 +27,7 @@ export function getLocalizedCountryName(countryCode: string): string {
 
 export function getLocalizedLanguageName(languageCode: string): string {
   try {
-    const displayNames = new Intl.DisplayNames([navigator.language], {
+    const displayNames = new Intl.DisplayNames([getLocale()], {
       type: "language",
     });
     return displayNames.of(languageCode) || languageCode;

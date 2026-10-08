@@ -5,9 +5,11 @@ go 1.27.0
 require (
 	github.com/SladkyCitron/resona v1.4.0
 	github.com/SladkyCitron/slogcolor v1.9.0
+	github.com/Xuanwo/go-locale v1.1.3
 	github.com/smallnest/ringbuffer v0.1.1
 	github.com/tosone/minimp3 v1.0.2
 	github.com/wailsapp/wails/v3 v3.0.0-beta.28
+	golang.org/x/text v0.39.0
 )
 
 require (

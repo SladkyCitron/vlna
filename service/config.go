@@ -10,16 +10,28 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/Xuanwo/go-locale"
 	"github.com/wailsapp/wails/v3/pkg/application"
+	"golang.org/x/text/language"
 )
 
 type Config struct {
 	Theme     string   `json:"theme"`
+	Locale    string   `json:"locale"`
 	Favorites []string `json:"favorites"`
 }
 
-var defaultConfig = &Config{
-	Theme: "dark",
+func defaultConfig() *Config {
+	tag, err := locale.Detect()
+	if err != nil {
+		slog.Warn("Failed to detect locale, defaulting to English", "error", err)
+	}
+	tag = language.English
+
+	return &Config{
+		Theme:  "dark",
+		Locale: tag.String(),
+	}
 }
 
 type ConfigService struct {
@@ -62,7 +74,7 @@ func (s *ConfigService) ServiceStartup(ctx context.Context, options application.
 		}
 		defer file.Close()
 
-		s.cfg = defaultConfig
+		s.cfg = defaultConfig()
 
 		if err := json.MarshalWrite(file, s.cfg, jsontext.Multiline(true)); err != nil {
 			return err
@@ -158,4 +170,8 @@ func (s *ConfigService) SetFavorites(favorites Stations) {
 
 func (s *ConfigService) SetTheme(theme string) {
 	s.cfg.Theme = theme
+}
+
+func (s *ConfigService) SetLocale(locale string) {
+	s.cfg.Locale = locale
 }

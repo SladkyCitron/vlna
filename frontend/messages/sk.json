@@ -9,6 +9,8 @@
   "settings.theme.description": "Vyberte si medzi svetlým alebo tmavým motívom.",
   "settings.theme.light": "Svetlý",
   "settings.theme.dark": "Tmavý",
+  "settings.language": "Jazyk",
+  "settings.language.description": "Vyberte si preferovaný jazyk. (je potrebný reštart)",
   "loading": "Načítava sa...",
   "stationDetails": "Podrobnosti stanice",
   "url": "URL",

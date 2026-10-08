@@ -9,6 +9,8 @@
   "settings.theme.description": "Choose between light or dark theme.",
   "settings.theme.light": "Light",
   "settings.theme.dark": "Dark",
+  "settings.language": "Language",
+  "settings.language.description": "Choose your preferred language. (restart required)",
   "loading": "Loading...",
   "stationDetails": "Station Details",
   "url": "URL",
