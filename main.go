@@ -15,6 +15,10 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+func init() {
+	application.RegisterEvent[map[string]string]("player:icy-metadata")
+}
+
 func main() {
 	logger := slog.New(slogcolor.NewHandler(os.Stderr, slogcolor.DefaultOptions))
 	slog.SetDefault(logger)
@@ -26,6 +30,7 @@ func main() {
 			application.NewService(service.NewIPInfoService()),
 			application.NewService(service.NewConfigService()),
 			application.NewService(service.NewStationService()),
+			application.NewService(service.NewPlayerService()),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

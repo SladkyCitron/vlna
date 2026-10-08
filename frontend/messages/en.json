@@ -24,5 +24,7 @@
   "bitrate": "Bitrate",
   "hls": "HLS",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "noStationSelected": "No station selected",
+  "chooseStation": "Choose a station to start listening"
 }

@@ -24,5 +24,7 @@
   "bitrate": "Bitový tok",
   "hls": "HLS",
   "yes": "Áno",
-  "no": "Nie"
+  "no": "Nie",
+  "noStationSelected": "Žiadna stanica",
+  "chooseStation": "Vyberte stanicu, aby ste mohli začať počúvať"
 }

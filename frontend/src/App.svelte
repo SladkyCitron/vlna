@@ -1,6 +1,7 @@
 <script lang="ts">
   import TitleBar from "$lib/components/TitleBar.svelte";
   import Sidebar from "$lib/components/Sidebar.svelte";
+  import Player from "$lib/components/Player.svelte";
   import StationDetails from "$lib/components/StationDetails.svelte";
   import Explore from "$lib/components/views/Explore.svelte";
   import Favorites from "$lib/components/views/Favorites.svelte";
@@ -34,6 +35,8 @@
       {/if}
     </main>
   </div>
+
+  <Player />
 </div>
 
 <StationDetails />

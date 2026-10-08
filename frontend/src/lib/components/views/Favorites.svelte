@@ -12,6 +12,7 @@
     loadFavorites,
     toggleFavorite,
   } from "$lib/stores/favorites";
+  import { playStation } from "$lib/stores/player";
   import { getLocalizedCountryName } from "$lib/utils";
   import * as m from "$lib/paraglide/messages.js";
 
@@ -22,6 +23,11 @@
   function removeFavorite(event: MouseEvent, station: Station) {
     stopStationDetails(event);
     toggleFavorite(station);
+  }
+
+  function play(event: MouseEvent, station: Station) {
+    stopStationDetails(event);
+    playStation(station);
   }
 
   onMount(() => {
@@ -73,7 +79,10 @@
                   >
                     <Heart fill="currentColor" />
                   </Button>
-                  <Button variant="outline" onclick={stopStationDetails}>
+                  <Button
+                    variant="outline"
+                    onclick={(event) => play(event, station)}
+                  >
                     <Play />
                   </Button>
                 </ButtonGroup.Root>

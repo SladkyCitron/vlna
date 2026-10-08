@@ -20,6 +20,7 @@
     loadFavorites,
     toggleFavorite,
   } from "$lib/stores/favorites";
+  import { playStation } from "$lib/stores/player";
 
   // fetch IP info for location
   let ipInfo: IPInfo | null = null;
@@ -34,6 +35,11 @@
   function toggleStationFavorite(event: MouseEvent, station: Station) {
     stopStationDetails(event);
     toggleFavorite(station);
+  }
+
+  function play(event: MouseEvent, station: Station) {
+    stopStationDetails(event);
+    playStation(station);
   }
 
   onMount(() => {
@@ -112,7 +118,10 @@
                         : "none"}
                     />
                   </Button>
-                  <Button variant="outline" onclick={stopStationDetails}>
+                  <Button
+                    variant="outline"
+                    onclick={(event) => play(event, station)}
+                  >
                     <Play />
                   </Button>
                 </ButtonGroup.Root>
