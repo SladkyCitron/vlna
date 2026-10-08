@@ -17,6 +17,22 @@
     const target = e.target as HTMLInputElement;
     setPlayerVolume(Number(target.value));
   }
+
+  function formatSongMetadata() {
+    if ($currentSongMetadata?.artist) {
+      return `${$currentSongMetadata.artist} - ${$currentSongMetadata.title}`.replace(
+        /hatsune.miku/i,
+        "<strong>Hatsune Miku</strong>"
+      );
+    } else if ($currentSongMetadata?.title) {
+      return $currentSongMetadata.title.replace(
+        /hatsune.miku/i,
+        "<strong>Hatsune Miku</strong>"
+      );
+    } else {
+      return "";
+    }
+  }
 </script>
 
 <footer
@@ -42,11 +58,9 @@
       </p>
       <p class="text-muted-foreground truncate text-xs">
         {#if $currentSongMetadata?.title}
-          <span class="text-primary font-medium"
-            >{$currentSongMetadata.artist
-              ? `${$currentSongMetadata.artist} - `
-              : ""}{$currentSongMetadata.title}</span
-          >
+          <span class="text-primary font-medium">
+            {@html formatSongMetadata()}
+          </span>
         {:else if $currentStation}
           {getLocalizedCountryName($currentStation.countrycode)}
         {:else}
