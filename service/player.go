@@ -18,6 +18,7 @@ import (
 	_ "github.com/SladkyCitron/resona/playback/driver/oto"
 	"github.com/SladkyCitron/vlna/icy"
 	"github.com/SladkyCitron/vlna/minimp3"
+	"github.com/SladkyCitron/vlna/mpris"
 	"github.com/smallnest/ringbuffer"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -31,6 +32,8 @@ type PlayerService struct {
 	cancel      context.CancelFunc
 	ctx         context.Context
 	rb          *ringbuffer.RingBuffer
+	mpris       *mpris.Server
+	isPlaying   bool
 	mu          sync.Mutex
 }
 
@@ -51,7 +54,16 @@ func (s *PlayerService) ServiceStartup(ctx context.Context, options application.
 	}
 	s.ctx = ctx
 
+	s.mpris, err = mpris.Init(s)
+	if err != nil {
+		return fmt.Errorf("failed to initialize MPRIS: %w", err)
+	}
+
 	return nil
+}
+
+func (s *PlayerService) ServiceShutdown() error {
+	return mpris.Deinit()
 }
 
 func (s *PlayerService) Play(url string) error {
@@ -97,6 +109,7 @@ func (s *PlayerService) Play(url string) error {
 
 	reader := icy.NewReader(resp.Body, metaint, func(m map[string]string) {
 		slog.Info("Received ICY metadata", "metadata", m)
+		s.mpris.UpdateMetadata(m)
 		application.Get().Event.Emit("player:icy-metadata", m)
 	})
 
@@ -148,6 +161,9 @@ func (s *PlayerService) Play(url string) error {
 	s.player = s.playbackCtx.NewPlayer(s.pausable)
 	s.player.Play()
 
+	s.mpris.UpdatePlaybackStatus("Playing")
+	s.isPlaying = true
+
 	return nil
 }
 
@@ -157,6 +173,8 @@ func (s *PlayerService) Pause() {
 
 	if s.pausable != nil {
 		s.pausable.Pause()
+		s.mpris.UpdatePlaybackStatus("Paused")
+		s.isPlaying = false
 	}
 }
 
@@ -166,6 +184,8 @@ func (s *PlayerService) Resume() {
 
 	if s.pausable != nil {
 		s.pausable.Resume()
+		s.mpris.UpdatePlaybackStatus("Playing")
+		s.isPlaying = true
 	}
 }
 
@@ -174,6 +194,7 @@ func (s *PlayerService) SetVolume(gain float64) {
 	defer s.mu.Unlock()
 
 	s.gain.Gain = gain - 1
+	s.mpris.UpdateVolume(gain)
 	slog.Info("Volume set", "gain", gain, "actualGain", s.gain.Gain)
 }
 
@@ -198,4 +219,13 @@ func (s *PlayerService) stopInternal() {
 		s.player = nil
 	}
 	s.pausable = nil
+	s.mpris.UpdatePlaybackStatus("Stopped")
+	s.isPlaying = false
+}
+
+//wails:ignore
+func (s *PlayerService) IsPlaying() bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.isPlaying
 }
