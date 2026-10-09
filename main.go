@@ -18,6 +18,7 @@ var assets embed.FS
 func init() {
 	application.RegisterEvent[map[string]string]("player:icy-metadata")
 	application.RegisterEvent[string]("player:status")
+	application.RegisterEvent[string]("player:error")
 }
 
 func main() {

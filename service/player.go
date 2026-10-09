@@ -135,6 +135,7 @@ func (s *PlayerService) Play(url string) error {
 			}
 			if err != nil {
 				if ctx.Err() == nil {
+					application.Get().Event.Emit("player:error", fmt.Sprintf("Stream read error: %v", err))
 					slog.Error("Stream read error", "err", err)
 				}
 				break

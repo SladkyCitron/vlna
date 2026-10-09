@@ -28,5 +28,6 @@
   "yes": "Yes",
   "no": "No",
   "noStationSelected": "No station selected",
-  "chooseStation": "Choose a station to start listening"
+  "chooseStation": "Choose a station to start listening",
+  "error": "Error"
 }

@@ -12,6 +12,8 @@ export interface SongMetadata {
 
 export const currentStation = writable<Station | null>(null);
 export const status = writable<string>("Stopped");
+
+export const playError = writable<string | null>(null);
 export const currentSongMetadata = writable<SongMetadata | null>(null);
 export const volume = writable<number>(75);
 
@@ -37,10 +39,20 @@ Events.On("player:status", (event) => {
   }
 });
 
-export async function playStation(station: Station) {
+Events.On("player:error", (event) => {
+  const data = event.data;
+  if (data) {
+    playError.set(data);
+  }
+});
+
+export function playStation(station: Station) {
   currentStation.set(station);
   currentSongMetadata.set(null);
-  await PlayerService.Play(station.url_resolved || station.url);
+  playError.set(null);
+  PlayerService.Play(station.url_resolved || station.url).catch((error) => {
+    playError.set(error.message);
+  });
 }
 
 export async function togglePlay() {

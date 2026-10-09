@@ -28,5 +28,6 @@
   "yes": "Áno",
   "no": "Nie",
   "noStationSelected": "Žiadna stanica",
-  "chooseStation": "Vyberte stanicu, aby ste mohli začať počúvať"
+  "chooseStation": "Vyberte stanicu, aby ste mohli začať počúvať",
+  "error": "Chyba"
 }

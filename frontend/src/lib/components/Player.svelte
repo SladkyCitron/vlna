@@ -14,6 +14,7 @@
   import {
     currentStation,
     status,
+    playError,
     currentSongMetadata,
     volume,
     togglePlay,
@@ -70,7 +71,11 @@
       <Tooltip.Root>
         <Tooltip.Trigger>
           <p class="text-muted-foreground truncate text-xs">
-            {#if $currentSongMetadata?.title}
+            {#if $playError}
+              <span class="text-destructive font-medium">
+                {m.error()}
+              </span>
+            {:else if $currentSongMetadata?.title}
               <span class="text-primary font-medium">
                 {@html formatSongMetadata()}
               </span>
@@ -82,7 +87,9 @@
           </p>
         </Tooltip.Trigger>
         <Tooltip.Content side="top">
-          {#if $currentSongMetadata?.title}
+          {#if $playError}
+            {$playError}
+          {:else if $currentSongMetadata?.title}
             {@html formatSongMetadata()}
           {:else if $currentStation}
             {getLocalizedCountryName($currentStation.countrycode)}
@@ -116,17 +123,19 @@
       variant="secondary"
       size="icon-lg"
       class="rounded-full"
-      disabled={!$currentStation}
+      disabled={!$currentStation || $status === "Loading" || !!$playError}
       onclick={togglePlay}
     >
-      {#if $status === "Playing"}
+      {#if $playError}
+        <TriangleAlert class="size-5" />
+      {:else if $status === "Playing"}
         <Pause class="size-5 fill-current" />
       {:else if $status === "Paused" || $status === "Stopped"}
         <Play class="size-5 fill-current" />
       {:else if $status === "Loading"}
         <LoaderCircle class="size-5 animate-spin" />
       {:else}
-        <TriangleAlert class="size-5 fill-current" />
+        <Play class="size-5 fill-current" />
       {/if}
     </Button>
   </div>
