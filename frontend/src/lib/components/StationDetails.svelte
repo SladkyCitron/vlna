@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Radio, Copy } from "@lucide/svelte";
+  import { Check, Radio, Copy } from "@lucide/svelte";
   import * as Sheet from "$lib/components/ui/sheet";
   import * as Item from "$lib/components/ui/item";
   import { Separator } from "$lib/components/ui/separator";
@@ -21,10 +21,24 @@
     }
   }
 
-  function copy(text: string) {
-    navigator.clipboard.writeText(text).catch((err) => {
+  let copiedField = $state<string | null>(null);
+  let copiedResetTimeout: ReturnType<typeof setTimeout> | undefined;
+
+  async function copy(text: string, field: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      copiedField = field;
+      if (copiedResetTimeout) {
+        clearTimeout(copiedResetTimeout);
+      }
+      copiedResetTimeout = setTimeout(() => {
+        if (copiedField === field) {
+          copiedField = null;
+        }
+      }, 1000);
+    } catch (err) {
       console.error("Failed to copy text: ", err);
-    });
+    }
   }
 </script>
 
@@ -61,9 +75,11 @@
             <Item.Actions>
               <Button
                 variant="secondary"
-                onclick={() => copy($selectedStation.url)}
+                onclick={() => copy($selectedStation.url, "url")}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "url"}<Check class="size-4" />{:else}<Copy
+                    class="size-4"
+                  />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -75,9 +91,11 @@
             <Item.Actions>
               <Button
                 variant="secondary"
-                onclick={() => copy($selectedStation.homepage)}
+                onclick={() => copy($selectedStation.homepage, "homepage")}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "homepage"}<Check
+                    class="size-4"
+                  />{:else}<Copy class="size-4" />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -89,9 +107,11 @@
             <Item.Actions>
               <Button
                 variant="secondary"
-                onclick={() => copy($selectedStation.tags)}
+                onclick={() => copy($selectedStation.tags, "tags")}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "tags"}<Check class="size-4" />{:else}<Copy
+                    class="size-4"
+                  />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -106,9 +126,14 @@
               <Button
                 variant="secondary"
                 onclick={() =>
-                  copy(getLocalizedCountryName($selectedStation.countrycode))}
+                  copy(
+                    getLocalizedCountryName($selectedStation.countrycode),
+                    "country"
+                  )}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "country"}<Check
+                    class="size-4"
+                  />{:else}<Copy class="size-4" />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -122,9 +147,12 @@
             <Item.Actions>
               <Button
                 variant="secondary"
-                onclick={() => copy($selectedStation.countrycode)}
+                onclick={() =>
+                  copy($selectedStation.countrycode, "countrycode")}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "countrycode"}<Check
+                    class="size-4"
+                  />{:else}<Copy class="size-4" />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -138,9 +166,11 @@
             <Item.Actions>
               <Button
                 variant="secondary"
-                onclick={() => copy($selectedStation.state)}
+                onclick={() => copy($selectedStation.state, "state")}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "state"}<Check
+                    class="size-4"
+                  />{:else}<Copy class="size-4" />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -162,10 +192,13 @@
                     $selectedStation.languagecodes
                       .split(",")
                       .map((code) => getLocalizedCountryName(code))
-                      .join(", ")
+                      .join(", "),
+                    "languages"
                   )}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "languages"}<Check
+                    class="size-4"
+                  />{:else}<Copy class="size-4" />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -179,9 +212,12 @@
             <Item.Actions>
               <Button
                 variant="secondary"
-                onclick={() => copy($selectedStation.languagecodes)}
+                onclick={() =>
+                  copy($selectedStation.languagecodes, "languagecodes")}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "languagecodes"}<Check
+                    class="size-4"
+                  />{:else}<Copy class="size-4" />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -195,9 +231,11 @@
             <Item.Actions>
               <Button
                 variant="secondary"
-                onclick={() => copy($selectedStation.votes.toString())}
+                onclick={() => copy($selectedStation.votes.toString(), "votes")}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "votes"}<Check
+                    class="size-4"
+                  />{:else}<Copy class="size-4" />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -211,9 +249,11 @@
             <Item.Actions>
               <Button
                 variant="secondary"
-                onclick={() => copy($selectedStation.codec)}
+                onclick={() => copy($selectedStation.codec, "codec")}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "codec"}<Check
+                    class="size-4"
+                  />{:else}<Copy class="size-4" />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -228,9 +268,14 @@
               <Button
                 variant="secondary"
                 onclick={() =>
-                  copy($selectedStation.bitrate.toString() + " kbps")}
+                  copy(
+                    $selectedStation.bitrate.toString() + " kbps",
+                    "bitrate"
+                  )}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "bitrate"}<Check
+                    class="size-4"
+                  />{:else}<Copy class="size-4" />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -249,9 +294,11 @@
               <Button
                 variant="secondary"
                 onclick={() =>
-                  copy($selectedStation.hls === 1 ? m.yes() : m.no())}
+                  copy($selectedStation.hls === 1 ? m.yes() : m.no(), "hls")}
               >
-                <Copy class="size-4" />
+                {#if copiedField === "hls"}<Check class="size-4" />{:else}<Copy
+                    class="size-4"
+                  />{/if}
               </Button>
             </Item.Actions>
           </Item.Root>
@@ -260,3 +307,12 @@
     {/if}
   </Sheet.Content>
 </Sheet.Root>
+
+<style>
+  Check,
+  Copy {
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
+  }
+</style>
