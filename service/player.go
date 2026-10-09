@@ -31,9 +31,11 @@ type PlayerService struct {
 	curBody     io.ReadCloser
 	cancel      context.CancelFunc
 	ctx         context.Context
+	streamCtx   context.Context
 	rb          *ringbuffer.RingBuffer
 	mpris       *mpris.Server
 	isPlaying   bool
+	streaming   bool
 	mu          sync.Mutex
 }
 
@@ -77,6 +79,7 @@ func (s *PlayerService) Play(url string) error {
 
 	ctx, cancel := context.WithCancel(s.ctx)
 	s.cancel = cancel
+	s.streamCtx = ctx
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -115,6 +118,7 @@ func (s *PlayerService) Play(url string) error {
 		application.Get().Event.Emit("player:icy-metadata", m)
 	})
 
+	readErr := make(chan error, 1)
 	go func() {
 		tmp := make([]byte, 4096)
 		for {
@@ -137,6 +141,13 @@ func (s *PlayerService) Play(url string) error {
 				if ctx.Err() == nil {
 					application.Get().Event.Emit("player:error", fmt.Sprintf("Stream read error: %v", err))
 					slog.Error("Stream read error", "err", err)
+					readErr <- err
+
+					s.mu.Lock()
+					if s.streaming && s.streamCtx == ctx {
+						s.stopInternal()
+					}
+					s.mu.Unlock()
 				}
 				break
 			}
@@ -149,6 +160,17 @@ func (s *PlayerService) Play(url string) error {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
+		case err := <-readErr:
+			// clean up
+			cancel()
+			s.cancel = nil
+			_ = resp.Body.Close()
+			s.curBody = nil
+			s.streamCtx = nil
+			s.streaming = false
+			s.mpris.UpdatePlaybackStatus("Stopped")
+			application.Get().Event.Emit("player:status", "Stopped")
+			return fmt.Errorf("stream disconnected while buffering: %w", err)
 		default:
 			time.Sleep(10 * time.Millisecond)
 		}
@@ -167,6 +189,7 @@ func (s *PlayerService) Play(url string) error {
 	s.mpris.UpdatePlaybackStatus("Playing")
 	application.Get().Event.Emit("player:status", "Playing")
 	s.isPlaying = true
+	s.streaming = true
 
 	return nil
 }
@@ -216,6 +239,8 @@ func (s *PlayerService) stopInternal() {
 		s.cancel()
 		s.cancel = nil
 	}
+	s.streamCtx = nil
+	s.streaming = false
 	if s.curBody != nil {
 		s.curBody.Close()
 		s.curBody = nil
