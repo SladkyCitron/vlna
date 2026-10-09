@@ -42,6 +42,13 @@
   }
 </script>
 
+<svelte:window
+  on:keydown={(event) => {
+    if (event.key === "Escape" && $isStationDetailsOpen) {
+      closeStationDetails();
+    }
+  }}
+/>
 <Sheet.Root bind:open={$isStationDetailsOpen} onOpenChange={handleClose}>
   <Sheet.Content side="right">
     <Sheet.Header>

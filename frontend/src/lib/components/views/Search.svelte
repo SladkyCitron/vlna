@@ -58,6 +58,11 @@
       });
   }
 
+  function submitSearch(event: SubmitEvent) {
+    event.preventDefault();
+    searchStations();
+  }
+
   onMount(() => {
     void loadFavorites();
   });
@@ -65,10 +70,18 @@
 
 <div>
   <h1 class="pb-4 text-xl font-bold">{m.search()}</h1>
-  <Field.Field orientation="horizontal" class="mb-4">
-    <Input type="search" placeholder={m.search()} bind:value={query} />
-    <Button onclick={searchStations}>{m.search()}...</Button>
-  </Field.Field>
+  <form onsubmit={submitSearch}>
+    <Field.Field orientation="horizontal" class="mb-4">
+      <Input
+        type="search"
+        placeholder={m.search()}
+        bind:value={query}
+        autofocus
+        autocomplete="off"
+      />
+      <Button type="submit">{m.search()}...</Button>
+    </Field.Field>
+  </form>
   {#if stations}
     <div class="flex flex-col gap-4">
       {#each stations as station}

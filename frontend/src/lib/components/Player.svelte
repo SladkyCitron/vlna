@@ -47,6 +47,33 @@
   }
 </script>
 
+<svelte:window
+  on:keydown={(e) => {
+    // play/pause
+    if (e.code === "Space" && !$playError && $currentStation) {
+      e.preventDefault();
+      togglePlay();
+    }
+
+    // volume up
+    if (e.code === "ArrowUp") {
+      e.preventDefault();
+      setPlayerVolume(Math.min($volume + 5, 100));
+    }
+
+    // volume down
+    if (e.code === "ArrowDown") {
+      e.preventDefault();
+      setPlayerVolume(Math.max($volume - 5, 0));
+    }
+
+    // favorite
+    if (e.code === "KeyF" && $currentStation) {
+      e.preventDefault();
+      toggleFavorite($currentStation);
+    }
+  }}
+/>
 <footer
   class="border-border bg-card col-span-2 row-start-3 flex min-h-20 w-full items-center gap-4 border-t px-4 py-3 select-none"
 >
