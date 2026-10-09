@@ -71,6 +71,8 @@ func (s *PlayerService) Play(url string) error {
 	defer s.mu.Unlock()
 	s.stopInternal()
 
+	application.Get().Event.Emit("player:status", "Loading")
+
 	s.rb = ringbuffer.New(1024 * 1024) // 1 MB ring buffer
 
 	ctx, cancel := context.WithCancel(s.ctx)
@@ -162,6 +164,7 @@ func (s *PlayerService) Play(url string) error {
 	s.player.Play()
 
 	s.mpris.UpdatePlaybackStatus("Playing")
+	application.Get().Event.Emit("player:status", "Playing")
 	s.isPlaying = true
 
 	return nil
@@ -174,6 +177,7 @@ func (s *PlayerService) Pause() {
 	if s.pausable != nil {
 		s.pausable.Pause()
 		s.mpris.UpdatePlaybackStatus("Paused")
+		application.Get().Event.Emit("player:status", "Paused")
 		s.isPlaying = false
 	}
 }
@@ -185,6 +189,7 @@ func (s *PlayerService) Resume() {
 	if s.pausable != nil {
 		s.pausable.Resume()
 		s.mpris.UpdatePlaybackStatus("Playing")
+		application.Get().Event.Emit("player:status", "Playing")
 		s.isPlaying = true
 	}
 }
@@ -220,6 +225,7 @@ func (s *PlayerService) stopInternal() {
 	}
 	s.pausable = nil
 	s.mpris.UpdatePlaybackStatus("Stopped")
+	application.Get().Event.Emit("player:status", "Stopped")
 	s.isPlaying = false
 }
 

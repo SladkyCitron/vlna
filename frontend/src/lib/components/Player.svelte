@@ -1,10 +1,18 @@
 <script lang="ts">
-  import { Heart, Pause, Play, Radio, Volume2 } from "@lucide/svelte";
+  import {
+    Heart,
+    Pause,
+    Play,
+    Radio,
+    Volume2,
+    LoaderCircle,
+    TriangleAlert,
+  } from "@lucide/svelte";
   import { Button } from "$lib/components/ui/button";
   import * as m from "$lib/paraglide/messages.js";
   import {
     currentStation,
-    isPlaying,
+    status,
     currentSongMetadata,
     volume,
     togglePlay,
@@ -19,6 +27,8 @@
   }
 
   function formatSongMetadata() {
+    // format the song metadata to display "Artist - Title"
+    // and make Hatsune Miku's name bold (easter egg)
     if ($currentSongMetadata?.artist) {
       return `${$currentSongMetadata.artist} - ${$currentSongMetadata.title}`.replace(
         /hatsune.miku/i,
@@ -95,10 +105,14 @@
       disabled={!$currentStation}
       onclick={togglePlay}
     >
-      {#if $isPlaying}
+      {#if $status === "Playing"}
         <Pause class="size-5 fill-current" />
-      {:else}
+      {:else if $status === "Paused" || $status === "Stopped"}
         <Play class="size-5 fill-current" />
+      {:else if $status === "Loading"}
+        <LoaderCircle class="size-5 animate-spin" />
+      {:else}
+        <TriangleAlert class="size-5 fill-current" />
       {/if}
     </Button>
   </div>

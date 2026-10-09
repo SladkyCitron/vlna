@@ -11,7 +11,7 @@ export interface SongMetadata {
 }
 
 export const currentStation = writable<Station | null>(null);
-export const isPlaying = writable<boolean>(false);
+export const status = writable<string>("Stopped");
 export const currentSongMetadata = writable<SongMetadata | null>(null);
 export const volume = writable<number>(75);
 
@@ -30,25 +30,29 @@ Events.On("player:icy-metadata", (event) => {
   }
 });
 
+Events.On("player:status", (event) => {
+  const data = event.data;
+  if (data) {
+    status.set(data);
+  }
+});
+
 export async function playStation(station: Station) {
   currentStation.set(station);
   currentSongMetadata.set(null);
-  isPlaying.set(true);
   await PlayerService.Play(station.url_resolved || station.url);
 }
 
 export async function togglePlay() {
-  let playing = false;
-  isPlaying.subscribe((v) => (playing = v))();
+  let _status = "";
+  status.subscribe((v) => (_status = v))();
 
-  if (playing) {
-    isPlaying.set(false);
+  if (_status === "Playing") {
     await PlayerService.Pause();
   } else {
     let station: Station | null = null;
     currentStation.subscribe((v) => (station = v))();
     if (station) {
-      isPlaying.set(true);
       await PlayerService.Resume();
     }
   }
