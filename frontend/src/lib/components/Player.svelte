@@ -22,6 +22,7 @@
   } from "$lib/stores/player";
   import { toggleFavorite, favorites } from "$lib/stores/favorites";
   import { getLocalizedCountryName } from "$lib/utils";
+  import { openStationDetails } from "$lib/stores/stationDetails";
 
   function handleVolumeChange(e: Event) {
     const target = e.target as HTMLInputElement;
@@ -43,6 +44,12 @@
       );
     } else {
       return "";
+    }
+  }
+
+  function openDetails() {
+    if ($currentStation) {
+      openStationDetails($currentStation);
     }
   }
 </script>
@@ -80,6 +87,7 @@
   <div class="flex min-w-0 flex-1 items-center gap-3">
     <div
       class="bg-muted text-muted-foreground flex size-12 shrink-0 items-center justify-center rounded-md"
+      onclick={openDetails}
     >
       {#if $currentStation?.favicon}
         <img
@@ -92,7 +100,10 @@
       {/if}
     </div>
     <div class="min-w-0">
-      <p class="text-foreground truncate text-sm font-semibold">
+      <p
+        class="text-foreground truncate text-sm font-semibold"
+        onclick={openDetails}
+      >
         {$currentStation ? $currentStation.name : m.noStationSelected()}
       </p>
       <Tooltip.Root>
