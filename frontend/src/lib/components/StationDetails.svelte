@@ -307,12 +307,3 @@
     {/if}
   </Sheet.Content>
 </Sheet.Root>
-
-<style>
-  Check,
-  Copy {
-    transition:
-      background-color 0.2s ease-in-out,
-      color 0.2s ease-in-out;
-  }
-</style>

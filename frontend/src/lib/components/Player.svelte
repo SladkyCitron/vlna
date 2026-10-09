@@ -9,6 +9,7 @@
     TriangleAlert,
   } from "@lucide/svelte";
   import { Button } from "$lib/components/ui/button";
+  import * as Tooltip from "$lib/components/ui/tooltip";
   import * as m from "$lib/paraglide/messages.js";
   import {
     currentStation,
@@ -66,17 +67,30 @@
       <p class="text-foreground truncate text-sm font-semibold">
         {$currentStation ? $currentStation.name : m.noStationSelected()}
       </p>
-      <p class="text-muted-foreground truncate text-xs">
-        {#if $currentSongMetadata?.title}
-          <span class="text-primary font-medium">
+      <Tooltip.Root>
+        <Tooltip.Trigger>
+          <p class="text-muted-foreground truncate text-xs">
+            {#if $currentSongMetadata?.title}
+              <span class="text-primary font-medium">
+                {@html formatSongMetadata()}
+              </span>
+            {:else if $currentStation}
+              {getLocalizedCountryName($currentStation.countrycode)}
+            {:else}
+              {m.chooseStation()}
+            {/if}
+          </p>
+        </Tooltip.Trigger>
+        <Tooltip.Content side="top">
+          {#if $currentSongMetadata?.title}
             {@html formatSongMetadata()}
-          </span>
-        {:else if $currentStation}
-          {getLocalizedCountryName($currentStation.countrycode)}
-        {:else}
-          {m.chooseStation()}
-        {/if}
-      </p>
+          {:else if $currentStation}
+            {getLocalizedCountryName($currentStation.countrycode)}
+          {:else}
+            {m.chooseStation()}
+          {/if}
+        </Tooltip.Content>
+      </Tooltip.Root>
     </div>
     {#if $currentStation}
       <Button
