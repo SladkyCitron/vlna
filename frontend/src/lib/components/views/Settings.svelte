@@ -3,9 +3,11 @@
   import { Separator } from "$lib/components/ui/separator";
   import * as Item from "$lib/components/ui/item";
   import * as Select from "$lib/components/ui/select";
+  import * as Dialog from "$lib/components/ui/dialog";
+  import { buttonVariants } from "$lib/components/ui/button";
   import { theme } from "$lib/stores/theme";
   import { locale } from "$lib/stores/locale";
-  import { Palette, Languages } from "@lucide/svelte";
+  import { Palette, Languages, Info } from "@lucide/svelte";
 </script>
 
 <div class="flex flex-col gap-4">
@@ -50,6 +52,28 @@
             <Select.Item value="sk">Slovenčina</Select.Item>
           </Select.Content>
         </Select.Root>
+      </Item.Actions>
+    </Item.Root>
+    <Item.Root>
+      <Item.Media variant="icon"><Info /></Item.Media>
+      <Item.Content>
+        <Item.Title>{m["settings.about"]()}</Item.Title>
+      </Item.Content>
+      <Item.Actions>
+        <Dialog.Root>
+          <Dialog.Trigger
+            type="button"
+            class={buttonVariants({ variant: "outline" })}
+          >
+            {m["settings.about"]()}
+          </Dialog.Trigger>
+          <Dialog.Content>
+            <Dialog.Header>
+              <Dialog.Title>{m["settings.about"]()}</Dialog.Title>
+              <Dialog.Description>TODO</Dialog.Description>
+            </Dialog.Header>
+          </Dialog.Content>
+        </Dialog.Root>
       </Item.Actions>
     </Item.Root>
   </Item.Group>

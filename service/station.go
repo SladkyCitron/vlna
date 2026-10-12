@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json/v2"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"runtime"
@@ -80,6 +81,7 @@ func NewStationService() *StationService {
 }
 
 func (s *StationService) ServiceStartup(ctx context.Context, options application.ServiceOptions) error {
+	slog.Info("User Agent: " + getUserAgent())
 	s.ctx = ctx
 	return nil
 }

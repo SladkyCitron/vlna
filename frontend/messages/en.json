@@ -11,6 +11,7 @@
   "settings.theme.dark": "Dark",
   "settings.language": "Language",
   "settings.language.description": "Choose your preferred language. (restart required)",
+  "settings.about": "About",
   "loading": "Loading...",
   "stationDetails": "Station Details",
   "url": "URL",
