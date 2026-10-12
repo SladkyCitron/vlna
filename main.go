@@ -33,6 +33,7 @@ func main() {
 			application.NewService(service.NewConfigService()),
 			application.NewService(service.NewStationService()),
 			application.NewService(service.NewPlayerService()),
+			application.NewService(service.NewVersionService()),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

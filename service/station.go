@@ -9,19 +9,16 @@ import (
 	"net/url"
 	"runtime"
 
+	"github.com/SladkyCitron/vlna/version"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
 const radioBrowserURL = "https://de1.api.radio-browser.info"
 
 func getUserAgent() string {
-	version := "" // TODO: Replace with actual version if available
-	if version == "" {
-		version = "0.0.0-dev"
-	}
 	return fmt.Sprintf(
 		"Vlna/%s (https://github.com/SladkyCitron/vlna) Go/%s (%s/%s)",
-		version,
+		version.Version,
 		runtime.Version()[2:],
 		runtime.GOOS,
 		runtime.GOARCH,

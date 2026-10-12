@@ -8,6 +8,14 @@
   import { theme } from "$lib/stores/theme";
   import { locale } from "$lib/stores/locale";
   import { Palette, Languages, Info } from "@lucide/svelte";
+  import { VersionService } from "$bindings/github.com/SladkyCitron/vlna/service";
+  import { onMount } from "svelte";
+
+  let version = $state("");
+
+  onMount(async () => {
+    version = await VersionService.GetVersion();
+  });
 </script>
 
 <div class="flex flex-col gap-4">
@@ -70,7 +78,9 @@
           <Dialog.Content>
             <Dialog.Header>
               <Dialog.Title>{m["settings.about"]()}</Dialog.Title>
-              <Dialog.Description>TODO</Dialog.Description>
+              <Dialog.Description>
+                Vlna v{version}
+              </Dialog.Description>
             </Dialog.Header>
           </Dialog.Content>
         </Dialog.Root>

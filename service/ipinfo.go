@@ -56,6 +56,7 @@ func (s *IPInfoService) Fetch() (*IPInfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to create network request: %w", err)
 	}
+	req.Header.Set("User-Agent", getUserAgent())
 
 	resp, err := s.client.Do(req)
 	if err != nil {

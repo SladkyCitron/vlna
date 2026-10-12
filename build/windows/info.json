@@ -1,10 +1,10 @@
 {
 	"fixed": {
-		"file_version": "0.0.1"
+		"file_version": "0.0.0-dev"
 	},
 	"info": {
 		"0000": {
-			"ProductVersion": "0.0.1",
+			"ProductVersion": "0.0.0-dev",
 			"CompanyName": "SladkyCitron",
 			"FileDescription": "Internet radio player",
 			"LegalCopyright": "(c) 2026 SladkyCitron",
