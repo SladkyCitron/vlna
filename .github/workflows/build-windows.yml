@@ -24,6 +24,8 @@ jobs:
         run: go install github.com/wailsapp/wails/v3/cmd/wails3@latest
 
       - name: Build app
+        env:
+          CGO_ENABLED: 1
         run: wails3 build
 
       - name: Upload artifact
