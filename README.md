@@ -2,7 +2,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/SladkyCitron/vlna)](LICENSE) ![Made in Slovakia](https://raw.githubusercontent.com/pedromxavier/flag-badges/refs/heads/main/badges/SK.svg)
 
-**Vlna** (means "wave" in Slovak) is a simple internet radio built with Go + Wails + Svelte.
+**Vlna** (pronounced *[ˈvl̩na]*, meaning "wave" in Slovak) is a simple internet radio built with Go + Wails + Svelte.
 
 **Video Demo:** <URL HERE>
 
