@@ -2,7 +2,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/SladkyCitron/vlna)](LICENSE) ![Made in Slovakia](https://raw.githubusercontent.com/pedromxavier/flag-badges/refs/heads/main/badges/SK.svg)
 
-**Vlna** (pronounced *[ˈvl̩na]*, meaning "wave" in Slovak) is a simple internet radio built with Go + Wails + Svelte.
+**Vlna** (pronounced _[ˈvl̩na]_, meaning "wave" in Slovak) is a simple internet radio built with Go + Wails 3 + Svelte 5.
 
 **Video Demo:** <URL HERE>
 
@@ -10,11 +10,11 @@
 
 - Play internet radio stations from all over the world
 - Search and favorite stations
-- Light and dark theme
-- Display currently playing song title and artist
-- MPRIS support
+- Real-time display of currently playing song title and artist (ICY metadata)
+- Light and dark theme and language with persistent storage
+- Full MPRIS support and media keys support
 - Cross-platform support
-- Super lightweight
+- Super lightweight and resource-friendly
 
 ## 📦 Installation (from source)
 
