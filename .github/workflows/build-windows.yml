@@ -21,7 +21,7 @@ jobs:
           node-version: "lts/*"
 
       - name: Install Wails
-        run: go install github.com/wailsapp/wails/v3/cmd/wails@latest
+        run: go install github.com/wailsapp/wails/v3/cmd/wails3@latest
 
       - name: Build app
         run: wails3 build
