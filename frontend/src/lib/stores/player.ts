@@ -50,7 +50,7 @@ export function playStation(station: Station) {
   currentStation.set(station);
   currentSongMetadata.set(null);
   playError.set(null);
-  PlayerService.Play(station.url_resolved || station.url).catch((error) => {
+  PlayerService.Play(station).catch((error) => {
     playError.set(error.message);
   });
 }

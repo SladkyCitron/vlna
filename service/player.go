@@ -16,6 +16,7 @@ import (
 	"github.com/SladkyCitron/resona/freq"
 	"github.com/SladkyCitron/resona/playback"
 	_ "github.com/SladkyCitron/resona/playback/driver/oto"
+	"github.com/SladkyCitron/vlna/discordrichpresence"
 	"github.com/SladkyCitron/vlna/icy"
 	"github.com/SladkyCitron/vlna/minimp3"
 	"github.com/SladkyCitron/vlna/mpris"
@@ -24,20 +25,26 @@ import (
 )
 
 type PlayerService struct {
-	playbackCtx *playback.Context
-	player      *playback.Player
-	volume      *effect.Volume
-	pausable    *aio.PausableReader
-	curBody     io.ReadCloser
-	cancel      context.CancelFunc
-	ctx         context.Context
-	streamCtx   context.Context
-	rb          *ringbuffer.RingBuffer
-	mpris       *mpris.Server
-	isPlaying   bool
-	streaming   bool
-	mu          sync.Mutex
+	playbackCtx   *playback.Context
+	player        *playback.Player
+	volume        *effect.Volume
+	pausable      *aio.PausableReader
+	curBody       io.ReadCloser
+	cancel        context.CancelFunc
+	ctx           context.Context
+	streamCtx     context.Context
+	rb            *ringbuffer.RingBuffer
+	mpris         *mpris.Server
+	discord       *discordrichpresence.Client
+	startTime     time.Time
+	startTimeOnce sync.Once
+	curStation    Station
+	isPlaying     bool
+	streaming     bool
+	mu            sync.Mutex
 }
+
+const discordAppID = "1559881627709218936"
 
 func NewPlayerService() *PlayerService {
 	return &PlayerService{
@@ -61,17 +68,36 @@ func (s *PlayerService) ServiceStartup(ctx context.Context, options application.
 		return fmt.Errorf("failed to initialize MPRIS: %w", err)
 	}
 
+	s.discord = discordrichpresence.NewClient(discordAppID)
+	err = s.discord.Connect()
+	if err != nil {
+		slog.Warn("Failed to connect to Discord Rich Presence", "err", err)
+	} else {
+		slog.Info("Connected to Discord Rich Presence")
+	}
+
 	return nil
 }
 
 func (s *PlayerService) ServiceShutdown() error {
+	if err := s.discord.ClearActivity(); err != nil {
+		return err
+	}
+	if err := s.discord.Close(); err != nil {
+		return err
+	}
+
 	return mpris.Deinit()
 }
 
-func (s *PlayerService) Play(url string) error {
+func (s *PlayerService) Play(station Station) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.stopInternal()
+
+	s.startTimeOnce.Do(func() {
+		s.startTime = time.Now()
+	})
 
 	application.Get().Event.Emit("player:status", "Loading")
 
@@ -81,7 +107,7 @@ func (s *PlayerService) Play(url string) error {
 	s.cancel = cancel
 	s.streamCtx = ctx
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, station.URLResolved, nil)
 	if err != nil {
 		return fmt.Errorf("failed to create network request: %w", err)
 	}
@@ -97,7 +123,7 @@ func (s *PlayerService) Play(url string) error {
 		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	slog.Info("Connected to stream", "url", url, "status", resp.Status)
+	slog.Info("Connected to stream", "url", station.URLResolved, "status", resp.Status)
 
 	s.curBody = resp.Body
 
@@ -186,12 +212,32 @@ func (s *PlayerService) Play(url string) error {
 	s.player = s.playbackCtx.NewPlayer(s.pausable)
 	s.player.Play()
 
-	s.mpris.UpdatePlaybackStatus("Playing")
-	application.Get().Event.Emit("player:status", "Playing")
 	s.isPlaying = true
 	s.streaming = true
+	s.curStation = station
+	application.Get().Event.Emit("player:status", "Playing")
+	s.mpris.UpdatePlaybackStatus("Playing")
+	s.updateDiscord()
 
 	return nil
+}
+
+func (s *PlayerService) updateDiscord() {
+	if s.isPlaying {
+		activity := discordrichpresence.NewActivity().
+			State(s.curStation.Name).
+			//Details(s.curStation.Name).
+			Type(2).
+			StartTime(s.startTime).
+			Build()
+		if err := s.discord.SetActivity(activity); err != nil {
+			slog.Error("Failed to set Discord Rich Presence activity", "err", err)
+		}
+	} else {
+		if err := s.discord.ClearActivity(); err != nil {
+			slog.Error("Failed to clear Discord Rich Presence activity", "err", err)
+		}
+	}
 }
 
 func (s *PlayerService) Pause() {
@@ -199,10 +245,11 @@ func (s *PlayerService) Pause() {
 	defer s.mu.Unlock()
 
 	if s.pausable != nil {
+		s.isPlaying = false
 		s.pausable.Pause()
 		s.mpris.UpdatePlaybackStatus("Paused")
 		application.Get().Event.Emit("player:status", "Paused")
-		s.isPlaying = false
+		s.updateDiscord()
 	}
 }
 
@@ -211,10 +258,11 @@ func (s *PlayerService) Resume() {
 	defer s.mu.Unlock()
 
 	if s.pausable != nil {
+		s.isPlaying = true
 		s.pausable.Resume()
 		s.mpris.UpdatePlaybackStatus("Playing")
 		application.Get().Event.Emit("player:status", "Playing")
-		s.isPlaying = true
+		s.updateDiscord()
 	}
 }
 
@@ -250,9 +298,9 @@ func (s *PlayerService) stopInternal() {
 		s.player = nil
 	}
 	s.pausable = nil
+	s.isPlaying = false
 	s.mpris.UpdatePlaybackStatus("Stopped")
 	application.Get().Event.Emit("player:status", "Stopped")
-	s.isPlaying = false
 }
 
 //wails:ignore
