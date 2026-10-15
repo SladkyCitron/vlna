@@ -26,7 +26,7 @@ import (
 type PlayerService struct {
 	playbackCtx *playback.Context
 	player      *playback.Player
-	gain        *effect.Gain
+	volume      *effect.Volume
 	pausable    *aio.PausableReader
 	curBody     io.ReadCloser
 	cancel      context.CancelFunc
@@ -41,7 +41,7 @@ type PlayerService struct {
 
 func NewPlayerService() *PlayerService {
 	return &PlayerService{
-		gain: &effect.Gain{Gain: -0.25},
+		volume: &effect.Volume{Volume: -20}, // default 75% = -20 dB
 	}
 }
 
@@ -182,7 +182,7 @@ func (s *PlayerService) Play(url string) error {
 		return fmt.Errorf("failed to decode MP3: %w", err)
 	}
 
-	s.pausable = aio.NewPausableReader(effect.Reader(deco, s.gain))
+	s.pausable = aio.NewPausableReader(effect.Reader(deco, s.volume))
 	s.player = s.playbackCtx.NewPlayer(s.pausable)
 	s.player.Play()
 
@@ -218,13 +218,13 @@ func (s *PlayerService) Resume() {
 	}
 }
 
-func (s *PlayerService) SetVolume(gain float64) {
+func (s *PlayerService) SetVolume(vol float64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	s.gain.Gain = gain - 1
-	s.mpris.UpdateVolume(gain)
-	slog.Info("Volume set", "gain", gain, "actualGain", s.gain.Gain)
+	s.volume.Volume = -80 * (1 - vol)
+	s.mpris.UpdateVolume(vol)
+	slog.Info("Volume set", "vol", vol, "actualVol", s.volume.Volume)
 }
 
 func (s *PlayerService) Stop() {
