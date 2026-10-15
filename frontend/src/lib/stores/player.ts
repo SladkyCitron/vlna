@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import {
   type Station,
   PlayerService,
@@ -16,6 +16,18 @@ export const status = writable<string>("Stopped");
 export const playError = writable<string | null>(null);
 export const currentSongMetadata = writable<SongMetadata | null>(null);
 export const volume = writable<number>(75);
+
+export const muted = writable<boolean>(false);
+
+let volumeCommand = Promise.resolve();
+
+function setBackendVolume(value: number) {
+  volumeCommand = volumeCommand.then(
+    () => PlayerService.SetVolume(value),
+    () => PlayerService.SetVolume(value)
+  );
+  return volumeCommand;
+}
 
 Events.On("player:icy-metadata", (event) => {
   const data = event.data;
@@ -72,5 +84,14 @@ export async function togglePlay() {
 
 export async function setPlayerVolume(val: number) {
   volume.set(val);
-  await PlayerService.SetVolume(val / 100);
+  if (val > 0) {
+    muted.set(false);
+  }
+  await setBackendVolume(val / 100);
+}
+
+export async function toggleMute() {
+  const nextMuted = !get(muted);
+  muted.set(nextMuted);
+  await setBackendVolume(nextMuted ? 0 : get(volume) / 100);
 }

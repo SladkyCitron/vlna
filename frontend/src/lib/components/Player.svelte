@@ -5,6 +5,9 @@
     Play,
     Radio,
     Volume2,
+    Volume1,
+    Volume,
+    VolumeX,
     LoaderCircle,
     TriangleAlert,
   } from "@lucide/svelte";
@@ -18,6 +21,8 @@
     currentSongMetadata,
     volume,
     togglePlay,
+    muted,
+    toggleMute,
     setPlayerVolume,
   } from "$lib/stores/player";
   import { toggleFavorite, favorites } from "$lib/stores/favorites";
@@ -191,7 +196,17 @@
   </div>
 
   <div class="flex min-w-0 flex-1 items-center justify-end gap-2">
-    <Volume2 class="text-muted-foreground size-4 shrink-0" />
+    <Button variant="ghost" onclick={toggleMute} size="icon" class="shrink-0">
+      {#if $volume === 0 || $muted}
+        <VolumeX class="size-4" />
+      {:else if $volume <= 33}
+        <Volume class="size-4" />
+      {:else if $volume <= 66}
+        <Volume1 class="size-4" />
+      {:else}
+        <Volume2 class="size-4" />
+      {/if}
+    </Button>
     <input
       class="accent-primary hidden h-1 w-24 cursor-pointer sm:block"
       type="range"
