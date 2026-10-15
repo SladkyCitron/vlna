@@ -60,25 +60,34 @@
 <svelte:window
   on:keydown={(e) => {
     // play/pause
-    if (e.code === "Space" && !$playError && $currentStation) {
+    if (
+      e.code === "Space" &&
+      !$playError &&
+      $currentStation &&
+      document.activeElement?.tagName !== "INPUT"
+    ) {
       e.preventDefault();
       togglePlay();
     }
 
     // volume up
-    if (e.code === "ArrowUp") {
+    if (e.code === "ArrowUp" && document.activeElement?.tagName !== "INPUT") {
       e.preventDefault();
       setPlayerVolume(Math.min($volume + 5, 100));
     }
 
     // volume down
-    if (e.code === "ArrowDown") {
+    if (e.code === "ArrowDown" && document.activeElement?.tagName !== "INPUT") {
       e.preventDefault();
       setPlayerVolume(Math.max($volume - 5, 0));
     }
 
     // favorite
-    if (e.code === "KeyF" && $currentStation) {
+    if (
+      e.code === "KeyF" &&
+      $currentStation &&
+      document.activeElement?.tagName !== "INPUT"
+    ) {
       e.preventDefault();
       toggleFavorite($currentStation);
     }
