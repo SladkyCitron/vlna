@@ -75,6 +75,12 @@
       togglePlay();
     }
 
+    // mute
+    if (e.code === "KeyM" && document.activeElement?.tagName !== "INPUT") {
+      e.preventDefault();
+      toggleMute();
+    }
+
     // volume up
     if (e.code === "ArrowUp" && document.activeElement?.tagName !== "INPUT") {
       e.preventDefault();
