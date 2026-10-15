@@ -44,6 +44,16 @@
       console.error("Failed to save Discord Rich Presence setting:", error);
     }
   }
+
+  const themes = [
+    { value: "light", label: m["settings.theme.light"]() },
+    { value: "dark", label: m["settings.theme.dark"]() },
+  ];
+
+  const locales = [
+    { value: "en", label: "English" },
+    { value: "sk", label: "Slovenčina" },
+  ];
 </script>
 
 <div class="flex flex-col gap-4">
@@ -57,15 +67,16 @@
         <Item.Description>{m["settings.theme.description"]()}</Item.Description>
       </Item.Content>
       <Item.Actions>
-        <Select.Root type="single" bind:value={$theme}>
+        <Select.Root type="single" bind:value={$theme} items={themes}>
           <Select.Trigger class="w-45">
             <Select.Value placeholder={m["settings.theme"]()} />
           </Select.Trigger>
           <Select.Content>
-            <Select.Item value="light"
-              >{m["settings.theme.light"]()}</Select.Item
-            >
-            <Select.Item value="dark">{m["settings.theme.dark"]()}</Select.Item>
+            {#each themes as themeOption}
+              <Select.Item value={themeOption.value}>
+                {themeOption.label}
+              </Select.Item>
+            {/each}
           </Select.Content>
         </Select.Root>
       </Item.Actions>
@@ -79,13 +90,16 @@
         >
       </Item.Content>
       <Item.Actions>
-        <Select.Root type="single" bind:value={$locale}>
+        <Select.Root type="single" bind:value={$locale} items={locales}>
           <Select.Trigger class="w-45">
             <Select.Value placeholder={m["settings.language"]()} />
           </Select.Trigger>
           <Select.Content>
-            <Select.Item value="en">English</Select.Item>
-            <Select.Item value="sk">Slovenčina</Select.Item>
+            {#each locales as localeOption}
+              <Select.Item value={localeOption.value}>
+                {localeOption.label}
+              </Select.Item>
+            {/each}
           </Select.Content>
         </Select.Root>
       </Item.Actions>
