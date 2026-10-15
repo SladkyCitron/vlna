@@ -11,6 +11,8 @@
   "settings.theme.dark": "Tmavý",
   "settings.language": "Jazyk",
   "settings.language.description": "Vyberte si preferovaný jazyk. (je potrebný reštart)",
+  "settings.discordrpc": "Discord Rich Presence",
+  "settings.discordrpc.description": "Umožnite zobrazenie stanice, ktorú práve počúvate, na vašom Discord profile.",
   "settings.about": "O aplikácii",
   "loading": "Načítava sa...",
   "stationDetails": "Podrobnosti stanice",

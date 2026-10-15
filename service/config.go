@@ -16,9 +16,10 @@ import (
 )
 
 type Config struct {
-	Theme     string   `json:"theme"`
-	Locale    string   `json:"locale"`
-	Favorites []string `json:"favorites"`
+	Theme      string   `json:"theme"`
+	Locale     string   `json:"locale"`
+	DiscordRPC bool     `json:"discordrpc"`
+	Favorites  []string `json:"favorites"`
 }
 
 func defaultConfig() *Config {
@@ -29,8 +30,9 @@ func defaultConfig() *Config {
 	tag = language.English
 
 	return &Config{
-		Theme:  "dark",
-		Locale: tag.String(),
+		Theme:      "dark",
+		Locale:     tag.String(),
+		DiscordRPC: true,
 	}
 }
 
@@ -174,4 +176,8 @@ func (s *ConfigService) SetTheme(theme string) {
 
 func (s *ConfigService) SetLocale(locale string) {
 	s.cfg.Locale = locale
+}
+
+func (s *ConfigService) SetDiscordRPC(enabled bool) {
+	s.cfg.DiscordRPC = enabled
 }

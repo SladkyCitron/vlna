@@ -11,6 +11,8 @@
   "settings.theme.dark": "Dark",
   "settings.language": "Language",
   "settings.language.description": "Choose your preferred language. (restart required)",
+  "settings.discordrpc": "Discord Rich Presence",
+  "settings.discordrpc.description": "Show your current listening station on your Discord profile.",
   "settings.about": "About",
   "loading": "Loading...",
   "stationDetails": "Station Details",

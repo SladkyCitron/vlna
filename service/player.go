@@ -25,6 +25,7 @@ import (
 )
 
 type PlayerService struct {
+	configService *ConfigService
 	playbackCtx   *playback.Context
 	player        *playback.Player
 	volume        *effect.Volume
@@ -46,9 +47,10 @@ type PlayerService struct {
 
 const discordAppID = "1559881627709218936"
 
-func NewPlayerService() *PlayerService {
+func NewPlayerService(configService *ConfigService) *PlayerService {
 	return &PlayerService{
-		volume: &effect.Volume{Volume: -20}, // default 75% = -20 dB
+		configService: configService,
+		volume:        &effect.Volume{Volume: -20}, // default 75% = -20 dB
 	}
 }
 
@@ -217,12 +219,17 @@ func (s *PlayerService) Play(station Station) error {
 	s.curStation = station
 	application.Get().Event.Emit("player:status", "Playing")
 	s.mpris.UpdatePlaybackStatus("Playing")
-	s.updateDiscord()
+	s.UpdateDiscordRPC()
 
 	return nil
 }
 
-func (s *PlayerService) updateDiscord() {
+func (s *PlayerService) UpdateDiscordRPC() {
+	if !s.configService.GetConfig().DiscordRPC {
+		_ = s.discord.ClearActivity()
+		return
+	}
+
 	if s.isPlaying {
 		activity := discordrichpresence.NewActivity().
 			State(s.curStation.Name).
@@ -249,7 +256,7 @@ func (s *PlayerService) Pause() {
 		s.pausable.Pause()
 		s.mpris.UpdatePlaybackStatus("Paused")
 		application.Get().Event.Emit("player:status", "Paused")
-		s.updateDiscord()
+		s.UpdateDiscordRPC()
 	}
 }
 
@@ -262,7 +269,7 @@ func (s *PlayerService) Resume() {
 		s.pausable.Resume()
 		s.mpris.UpdatePlaybackStatus("Playing")
 		application.Get().Event.Emit("player:status", "Playing")
-		s.updateDiscord()
+		s.UpdateDiscordRPC()
 	}
 }
 

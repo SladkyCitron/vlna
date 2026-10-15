@@ -25,14 +25,16 @@ func main() {
 	logger := slog.New(slogcolor.NewHandler(os.Stderr, slogcolor.DefaultOptions))
 	slog.SetDefault(logger)
 
+	configService := service.NewConfigService()
+
 	app := application.New(application.Options{
 		Name:        "Vlna",
 		Description: "Internet radio player",
 		Services: []application.Service{
 			application.NewService(service.NewIPInfoService()),
-			application.NewService(service.NewConfigService()),
+			application.NewService(configService),
 			application.NewService(service.NewStationService()),
-			application.NewService(service.NewPlayerService()),
+			application.NewService(service.NewPlayerService(configService)),
 			application.NewService(service.NewVersionService()),
 		},
 		Assets: application.AssetOptions{
