@@ -137,6 +137,8 @@
             </a>
           {/snippet}
         </Item.Root>
+      {:else}
+        <p class="ml-2">{m.noResults()}</p>
       {/each}
     </div>
   {:else}

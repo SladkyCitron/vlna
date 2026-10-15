@@ -32,5 +32,6 @@
   "no": "Nie",
   "noStationSelected": "Žiadna stanica",
   "chooseStation": "Vyberte stanicu, aby ste mohli začať počúvať",
-  "error": "Chyba"
+  "error": "Chyba",
+  "noResults": "Nenašli sa žiadne výsledky"
 }

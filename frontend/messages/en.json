@@ -32,5 +32,6 @@
   "no": "No",
   "noStationSelected": "No station selected",
   "chooseStation": "Choose a station to start listening",
-  "error": "Error"
+  "error": "Error",
+  "noResults": "No results found"
 }
