@@ -50,7 +50,7 @@ const discordAppID = "1559881627709218936"
 func NewPlayerService(configService *ConfigService) *PlayerService {
 	return &PlayerService{
 		configService: configService,
-		volume:        &effect.Volume{Volume: -20}, // default 75% = -20 dB
+		volume:        &effect.Volume{Volume: -15}, // default 75% = -15 dB
 	}
 }
 
@@ -277,7 +277,11 @@ func (s *PlayerService) SetVolume(vol float64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	s.volume.Volume = -80 * (1 - vol)
+	if vol <= 0 {
+		s.volume.Volume = -100 // mute
+	} else {
+		s.volume.Volume = -60 * (1 - vol)
+	}
 	s.mpris.UpdateVolume(vol)
 	slog.Info("Volume set", "vol", vol, "actualVol", s.volume.Volume)
 }
