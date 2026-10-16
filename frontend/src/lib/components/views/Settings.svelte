@@ -4,7 +4,7 @@
   import * as Item from "$lib/components/ui/item";
   import * as Select from "$lib/components/ui/select";
   import * as Dialog from "$lib/components/ui/dialog";
-  import { buttonVariants } from "$lib/components/ui/button";
+  import { Button, buttonVariants } from "$lib/components/ui/button";
   import { Switch } from "$lib/components/ui/switch";
   import { theme } from "$lib/stores/theme";
   import { locale } from "$lib/stores/locale";
@@ -42,6 +42,14 @@
       await PlayerService.UpdateDiscordRPC();
     } catch (error) {
       console.error("Failed to save Discord Rich Presence setting:", error);
+    }
+  }
+
+  async function openGitHub() {
+    try {
+      await VersionService.OpenGitHub();
+    } catch (error) {
+      console.error("Failed to open GitHub:", error);
     }
   }
 
@@ -134,8 +142,11 @@
               <Dialog.Title>{m["settings.about"]()}</Dialog.Title>
               <Dialog.Description>
                 Vlna v{version}
+                <br />
+                (c) 2026 SladkyCitron; MIT License
               </Dialog.Description>
             </Dialog.Header>
+            <Button onclick={openGitHub}>GitHub</Button>
           </Dialog.Content>
         </Dialog.Root>
       </Item.Actions>
