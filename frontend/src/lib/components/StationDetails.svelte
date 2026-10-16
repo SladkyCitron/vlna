@@ -12,6 +12,8 @@
   import { getLocalizedCountryName } from "$lib/utils";
   import * as m from "$lib/paraglide/messages.js";
 
+  let failedImage = $state(false);
+
   function handleClose(open: boolean) {
     if (!open) {
       open = false;
@@ -56,11 +58,14 @@
     </Sheet.Header>
     {#if $selectedStation}
       <div class="flex flex-col overflow-x-hidden overflow-y-auto px-4">
-        {#if $selectedStation.favicon}
+        {#if $selectedStation.favicon && !failedImage}
           <img
             src={$selectedStation.favicon}
             alt={$selectedStation.name}
             class="border-border flex size-32 items-center justify-center self-center rounded-md border"
+            onerror={() => {
+              failedImage = true;
+            }}
           />
         {:else}
           <div

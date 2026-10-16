@@ -23,10 +23,12 @@
   import { playStation } from "$lib/stores/player";
 
   // fetch IP info for location
-  let ipInfo: IPInfo | null = null;
+  let ipInfo: IPInfo | null = $state(null);
 
   // fetch stations
-  let stations: Stations = [];
+  let stations: Stations = $state([]);
+
+  let failedImages = $state(new Set<string>());
 
   function stopStationDetails(event: MouseEvent) {
     event.stopPropagation();
@@ -81,11 +83,16 @@
           {#snippet child({ props })}
             <a href="#/" onclick={() => openStationDetails(station)} {...props}>
               <Item.Media variant="image">
-                {#if station.favicon}
+                {#if station.favicon && !failedImages.has(station.stationuuid)}
                   <img
                     src={station.favicon}
                     alt={station.name}
                     class="size-16"
+                    onerror={() => {
+                      failedImages = new Set(failedImages).add(
+                        station.stationuuid
+                      );
+                    }}
                   />
                 {:else}
                   <Radio class="size-8" aria-label={station.name} />

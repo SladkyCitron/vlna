@@ -16,6 +16,8 @@
   import { getLocalizedCountryName } from "$lib/utils";
   import * as m from "$lib/paraglide/messages.js";
 
+  let failedImages = $state(new Set<string>());
+
   function stopStationDetails(event: MouseEvent) {
     event.stopPropagation();
   }
@@ -49,11 +51,16 @@
           {#snippet child({ props })}
             <a href="#/" onclick={() => openStationDetails(station)} {...props}>
               <Item.Media variant="image">
-                {#if station.favicon}
+                {#if station.favicon && !failedImages.has(station.favicon)}
                   <img
                     src={station.favicon}
                     alt={station.name}
                     class="size-16"
+                    onerror={() => {
+                      failedImages = new Set(failedImages).add(
+                        station.stationuuid
+                      );
+                    }}
                   />
                 {:else}
                   <Radio class="size-8" aria-label={station.name} />

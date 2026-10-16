@@ -29,6 +29,8 @@
   import { getLocalizedCountryName } from "$lib/utils";
   import { openStationDetails } from "$lib/stores/stationDetails";
 
+  let failedImage = $state(false);
+
   function handleVolumeChange(e: Event) {
     const target = e.target as HTMLInputElement;
     setPlayerVolume(Number(target.value));
@@ -112,11 +114,14 @@
       class="bg-muted text-muted-foreground flex size-12 shrink-0 items-center justify-center rounded-md"
       onclick={openDetails}
     >
-      {#if $currentStation?.favicon}
+      {#if $currentStation?.favicon && !failedImage}
         <img
           src={$currentStation.favicon}
           alt={$currentStation.name}
           class="size-full object-cover"
+          onerror={() => {
+            failedImage = true;
+          }}
         />
       {:else}
         <Radio class="size-6" />
