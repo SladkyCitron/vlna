@@ -103,7 +103,7 @@ func (s *PlayerService) Play(station Station) error {
 
 	application.Get().Event.Emit("player:status", "Loading")
 
-	s.rb = ringbuffer.New(1024 * 1024) // 1 MB ring buffer
+	s.rb = ringbuffer.New(1024 * 512) // 512 KB ring buffer
 
 	ctx, cancel := context.WithCancel(s.ctx)
 	s.cancel = cancel
@@ -183,6 +183,7 @@ func (s *PlayerService) Play(station Station) error {
 	}()
 
 	// wait for buffering
+	s.mu.Unlock()
 	slog.Info("Buffering...")
 	for s.rb.Length() < 32*1024 {
 		select {
@@ -203,6 +204,7 @@ func (s *PlayerService) Play(station Station) error {
 			time.Sleep(10 * time.Millisecond)
 		}
 	}
+	s.mu.Lock()
 
 	deco, err := minimp3.NewDecoder(s.rb)
 	if err != nil {
