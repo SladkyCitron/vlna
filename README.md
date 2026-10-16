@@ -4,7 +4,7 @@
 
 **Vlna** (pronounced _[ˈvl̩na]_, meaning "wave" in Slovak) is a lightweight internet radio player built with Go + Wails 3 + Svelte 5.
 
-**Video Demo:** <URL HERE>
+**Video Demo:** TODO
 
 ## ✨ Features
 
