@@ -6,6 +6,8 @@
 
 **Vlna** (pronounced _[ˈvl̩na]_, meaning "wave" in Slovak) is a lightweight internet radio player built with Go + Wails 3 + Svelte 5.
 
+> **This is my final project for CS50x.**
+
 **Video Demo:** TODO
 
 ## ✨ Features
@@ -47,7 +49,7 @@ wails3 build
 
 The built app will be located in the `bin` directory.
 
-## 🛠️ Architecture (because CS50)
+## 🛠️ Architecture (because CS50x requires it)
 
 The application is built using [Go](https://go.dev) and the [Wails 3](https://v3.wails.io) framework, with [Svelte 5](https://svelte.dev) + TypeScript + Tailwind CSS + shadcn + Paraglide on the web frontend side.
 Wails is a GUI framework for Go that allows the use of web technologies (HTML, CSS, JS) to build desktop applications. It's like Electron but for Go, and it uses the system's webview instead of bundling Chromium making it more lightweight and efficient than Electron.
