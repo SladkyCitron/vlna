@@ -4,7 +4,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/SladkyCitron/vlna)](LICENSE) ![Made in Slovakia](https://raw.githubusercontent.com/pedromxavier/flag-badges/refs/heads/main/badges/SK.svg)
 
-**Vlna** (pronounced _[ˈvl̩na]_, meaning "wave" in Slovak) is a lightweight internet radio player built with Go + Wails 3 + Svelte 5 as my final project for CS50x.
+**Vlna** (pronounced _[ˈvl̩na]_, meaning "wave" in Slovak) is a lightweight internet radio player built with Go + Wails 3 + Svelte 5 as my final project for Harvard's CS50x course.
 
 **Video Demo:** TODO
 
@@ -56,17 +56,17 @@ The built app will be located in the `bin` directory.
 
 The application is built using [Go](https://go.dev) and the [Wails 3](https://v3.wails.io) framework, with [Svelte 5](https://svelte.dev) + TypeScript + Tailwind CSS + shadcn + Paraglide on the web frontend side.
 Wails is a GUI framework for Go that allows the use of web technologies (HTML, CSS, JS) to build desktop applications. It's like Electron but for Go, and it uses the system's webview instead of bundling Chromium making it more lightweight and efficient than Electron.
-For the audio, I used my own audio framework, [Resona](https://github.com/SladkyCitron/resona), which uses [Oto](https://github.com/ebitengine/oto) under the hood for audio playback. Resona's built-in MP3 decoder is pure Go but it's limited and doesn't support Layer III MP3 streams (which seems to be most internet radios), so I had to integrate minimp3 via cgo instead.
+For the audio, I used my own audio framework, [Resona](https://github.com/SladkyCitron/resona), which uses [Oto](https://github.com/ebitengine/oto) under the hood for audio playback. Resona's built-in MP3 decoder is pure Go but it's limited and doesn't support Layer III streams (which seems to be most internet radios), so I had to integrate minimp3 via cgo instead.
 
 One of the most interesting parts of the project was handling network streams. HTTP network data doesn't always come at a steady rate, it comes at unpredictable bursts, especially on a flaky network connection. Initially, reading directly from `resp.Body` into the ICY + MP3 decoder caused lots of stuttering and freezing on the audio playback. To fix this, I had to implement a background goroutine that reads the network stream into a 512 KB ring buffer with a pre-buffering check. This basically decouples the network reading from audio playback, absorbing flaky network jitter and ensuring smooth playback.
-Also honorable mention: MPRIS support and Discord Rich Presence. MPRIS support was a bit tricky to implement because I've never worked with D-Bus before, but I managed to figure it out and it works on GNOME (my DE) now. Discord Rich Presence was a little easier to implement, basically what I had to do was first register my app on the Discord Developer Portal, but then I had to vendor and patch an existing Go package because it didn't look for Discord running in Flatpak. After fixing it, it works pretty much flawlessly now.
+MPRIS support and Discord Rich Presence also deserve a mention. MPRIS support was a bit tricky to implement because I've never worked with D-Bus before, but I managed to figure it out and it works on GNOME (my DE) now. Discord Rich Presence was a little easier to implement, basically what I had to do was first register my app on the Discord Developer Portal, but then I had to vendor and patch an existing Go package because it didn't look for Discord running in Flatpak. After fixing it, it works pretty much flawlessly now.
 
 Building a complete desktop app with Wails and Svelte was... an interesting experience. I'm new to web development but I learned a lot and I think the result is pretty good. :D
-I actually originally wanted to learn Wails and Svelte anyways for one of my other projects, [GoTAU](https://github.com/SladkyCitron/gotau), but after finally trying out Wails, I decided that [Gio](https://gioui.org) would be a better fit for GoTAU, but I used Wails for this project and learned webdev anyways, so there's that. Also screw Rust
+I actually originally wanted to learn Wails and Svelte anyways for one of my other projects, [GoTAU](https://github.com/SladkyCitron/gotau), but after trying Wails out, I decided that [Gio](https://gioui.org) would be a better fit for GoTAU, but I used Wails for this project and learned webdev anyways, so there's that. Also screw Rust
 
 I first did the rough MVP, added some extra features and details, and then I sent the app to one of my friends to test it. After a few bugfixes and feedback, I think the app is now in a good state to be properly released.
 
-I didn't do much vibe coding, I just used GitHub Copilot a little bit to help me out because it's free (via ISIC) and I don't have money for Claude.
+I did very little AI-assisted coding, I just used GitHub Copilot a little bit to help me out because it's free (via ISIC) and I don't have money for Claude.
 
 ### Project structure
 
