@@ -26,6 +26,11 @@ In the bottom player bar, if the currently playing song title or artist contains
 
 </details>
 
+### Tested platforms
+
+- Fedora Workstation 44 (GNOME 50.5) x86_64
+- Windows 11 26H2 x86_64
+
 ## 📦 Installation (from source)
 
 1. Install [Go](https://go.dev/doc/install)
