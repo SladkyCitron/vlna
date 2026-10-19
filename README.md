@@ -29,7 +29,7 @@ In the bottom player bar, if the currently playing song title or artist contains
 ### Tested platforms
 
 - Fedora Workstation 44 (GNOME 50.5) x86_64
-- Windows 11 26H2 x86_64
+- Windows 11 25H2 x86_64
 
 ## 📦 Installation (from source)
 
