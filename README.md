@@ -19,13 +19,6 @@
 - Cross-platform support
 - Lightweight desktop app with low resource overhead
 
-<details>
-<summary>Easter egg (click to reveal)</summary>
-
-In the bottom player bar, if the currently playing song title or artist contains "Hatsune Miku", it makes her name bold. >:3
-
-</details>
-
 ### Tested platforms
 
 - Fedora Workstation 44 (GNOME 50.5) x86_64
