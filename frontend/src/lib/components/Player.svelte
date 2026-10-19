@@ -37,15 +37,18 @@
   }
 
   function formatSongMetadata() {
+    // format the song metadata to display "Artist - Title"
+    // and make Hatsune Miku's name bold (easter egg)
+
     function escapeMiku(name: string) {
       return name
         .replace(/hatsune.miku/i, "<strong>Hatsune Miku</strong>")
         .replace(/miku.hatsune/i, "<strong>Miku Hatsune</strong>")
-        .replace(/miku/i, "<strong>Miku</strong>");
+        .replace(/miku/i, "<strong>Miku</strong>")
+        .replace(/初音ミク/i, "<strong>初音ミク</strong>")
+        .replace(/ミク/i, "<strong>ミク</strong>");
     }
 
-    // format the song metadata to display "Artist - Title"
-    // and make Hatsune Miku's name bold (easter egg)
     if ($currentSongMetadata?.artist) {
       return escapeMiku(
         `${$currentSongMetadata.artist} - ${$currentSongMetadata.title}`
