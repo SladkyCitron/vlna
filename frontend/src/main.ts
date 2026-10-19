@@ -9,7 +9,7 @@ async function start() {
     const config = await ConfigService.GetConfig();
     const configuredLocale =
       config && "locale" in config && typeof config.locale === "string"
-        ? config.locale.split("-")[0]
+        ? config.locale
         : undefined;
 
     if (configuredLocale && isLocale(configuredLocale)) {
@@ -22,7 +22,7 @@ async function start() {
   } catch (error) {
     console.error(
       "Failed to load locale from config, using fallback English:",
-      error,
+      error
     );
     setLocale("en", { reload: false });
   }

@@ -24,7 +24,7 @@ ConfigService.GetConfig()
   .then((config) => {
     const configuredLocale =
       config && "locale" in config && typeof config.locale === "string"
-        ? config.locale.split("-")[0]
+        ? config.locale
         : undefined;
 
     configLoaded = true;

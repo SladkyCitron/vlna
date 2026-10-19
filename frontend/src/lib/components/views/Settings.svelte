@@ -60,6 +60,7 @@
 
   const locales = [
     { value: "en", label: "English" },
+    { value: "en-pt", label: "English (Pirate Speak)" },
     { value: "sk", label: "Slovenčina" },
   ];
 </script>
