@@ -1,0 +1,227 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag to release (e.g. v1.2.3)
+        required: true
+        type: string
+      dry_run:
+        description: Build and generate release notes without creating a GitHub release
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Windows amd64 portable
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+
+      - name: Select release tag
+        id: release
+        shell: bash
+        run: |
+          tag="${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          version="${tag#v}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Wails
+        shell: bash
+        run: go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0-beta.28
+
+      - name: Set application version
+        shell: bash
+        run: |
+          sed -i "s/var Version = \".*\"/var Version = \"${{ steps.release.outputs.version }}\"/" version/version.go
+          sed -i "s/version: \".*\" # The application version/version: \"${{ steps.release.outputs.version }}\" # The application version/" build/config.yml
+
+      - name: Build portable executable
+        env:
+          CGO_ENABLED: 1
+        run: wails3 build
+
+      - name: Stage artifact
+        shell: bash
+        run: |
+          mkdir release
+          cp bin/vlna.exe release/vlna-windows-amd64.exe
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-amd64
+          path: release/vlna-windows-amd64.exe
+
+  linux:
+    name: Linux amd64 packages
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+
+      - name: Select release tag
+        id: release
+        shell: bash
+        run: |
+          tag="${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          version="${tag#v}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-4-dev libwebkitgtk-6.0-dev
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Wails
+        run: go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0-beta.28
+
+      - name: Set application and package version
+        run: |
+          version="${{ steps.release.outputs.version }}"
+          sed -i "s/var Version = \".*\"/var Version = \"$version\"/" version/version.go
+          sed -i "s/version: \".*\" # The application version/version: \"$version\" # The application version/" build/config.yml
+          sed -i "s/version: .*/version: $version/" build/linux/nfpm/nfpm.yaml
+
+      - name: Build AppImage, DEB, and RPM
+        run: wails3 task linux:package ARCH=amd64
+
+      - name: Stage artifacts
+        run: |
+          mkdir release
+          cp bin/*.AppImage release/
+          cp bin/*.deb release/
+          cp bin/*.rpm release/
+          test "$(find release -maxdepth 1 -type f | wc -l)" -eq 3
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: linux-amd64
+          path: release/*
+
+  release:
+    name: Create draft release
+    needs: [windows, linux]
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+
+      - name: Select release tag
+        id: release
+        run: |
+          tag="${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Download release artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: release
+          merge-multiple: true
+
+      - name: Generate release notes and checksums
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          previous_tag="$(git describe --tags --abbrev=0 "$RELEASE_TAG^" 2>/dev/null || true)"
+          if [ -n "$previous_tag" ]; then
+            range="$previous_tag..$RELEASE_TAG"
+          else
+            range="$RELEASE_TAG"
+          fi
+
+          {
+            echo "# Changes"
+            echo
+            for type in feat fix perf refactor docs build ci test chore; do
+              commits="$(git log --format='%s (%h)' "$range" --extended-regexp --grep="^${type}(\([^)]*\))?:" -i || true)"
+              if [ -n "$commits" ]; then
+                case "$type" in
+                  feat) title="Features" ;;
+                  fix) title="Fixes" ;;
+                  perf) title="Performance" ;;
+                  refactor) title="Refactoring" ;;
+                  docs) title="Documentation" ;;
+                  build) title="Build" ;;
+                  ci) title="CI" ;;
+                  test) title="Tests" ;;
+                  chore) title="Maintenance" ;;
+                esac
+                echo "## $title"
+                sed 's/^/- /' <<< "$commits"
+                echo
+              fi
+            done
+            echo "## Checksums (SHA-256)"
+            echo
+            echo '```text'
+            (cd release && sha256sum *) | sort
+            echo '```'
+          } > release-notes.md
+
+      - name: Create draft GitHub release
+        if: >-
+          github.event_name == 'push' ||
+          inputs.dry_run == false
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          gh release create "$RELEASE_TAG" release/* \
+            --draft \
+            --verify-tag \
+            --title "$RELEASE_TAG" \
+            --notes-file release-notes.md
+
+      - name: Report dry run
+        if: >-
+          github.event_name == 'workflow_dispatch' &&
+          inputs.dry_run == true
+        run: echo "Dry run complete; no GitHub release was created."
