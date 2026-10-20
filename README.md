@@ -24,7 +24,13 @@
 - Fedora Workstation 44 (GNOME 50.5) x86_64
 - Windows 11 25H2 x86_64
 
-## 📦 Installation (from source)
+## 📦 Installation
+
+### Pre-built binaries
+
+You can download the latest pre-built binaries for your platform from the [GitHub Releases](https://github.com/SladkyCitron/vlna/releases) page.
+
+### From source
 
 1. Install [Go](https://go.dev/doc/install)
 2. Install a C compiler
@@ -63,7 +69,7 @@ I did very little AI-assisted coding, I just used GitHub Copilot a little bit to
 
 ### Project structure
 
-- `.github/workflows` - GitHub Actions for building the app for Windows (because my friend uses Windows and I use Fedora)
+- `.github/workflows` - GitHub Actions for building and releasing the app
 - `bin` - built app binaries
 - `build` - build files and scripts (Dockerfiles, manifests, icons, etc.)
 - `frontend` - Svelte 5 + TypeScript frontend
