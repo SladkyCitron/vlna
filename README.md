@@ -16,7 +16,7 @@
 - Light and dark themes, with persistent theme and language preferences
 - Full MPRIS support and media keys support
 - Discord Rich Presence integration
-- Cross-platform support
+- Cross-platform desktop support
 - Lightweight desktop app with low resource overhead
 
 ### Tested platforms
@@ -29,6 +29,7 @@
 ### Pre-built binaries
 
 You can download the latest pre-built binaries for your platform from the [GitHub Releases](https://github.com/SladkyCitron/vlna/releases) page.
+You will also need to have a system webview installed for the app to work.
 
 ### From source
 
@@ -51,14 +52,19 @@ wails3 build
 
 The built app will be located in the `bin` directory.
 
-## 🛠️ Architecture (because CS50x requires it)
+## 🛠️ Behind the scenes
+
+### Architecture and technical details
 
 The application is built using [Go](https://go.dev) and the [Wails 3](https://v3.wails.io) framework, with [Svelte 5](https://svelte.dev) + TypeScript + Tailwind CSS + shadcn + Paraglide on the web frontend side.
 Wails is a GUI framework for Go that allows the use of web technologies (HTML, CSS, JS) to build desktop applications. It's like Electron but for Go, and it uses the system's webview instead of bundling Chromium making it more lightweight and efficient than Electron.
 For the audio, I used my own audio framework, [Resona](https://github.com/SladkyCitron/resona), which uses [Oto](https://github.com/ebitengine/oto) under the hood for audio playback. Resona's built-in MP3 decoder is pure Go but it's limited and doesn't support Layer III streams (which seems to be most internet radios), so I had to integrate minimp3 via cgo instead.
 
-One of the most interesting parts of the project was handling network streams. HTTP network data doesn't always come at a steady rate, it comes at unpredictable bursts, especially on a flaky network connection. Initially, reading directly from `resp.Body` into the ICY + MP3 decoder caused lots of stuttering and freezing on the audio playback. To fix this, I had to implement a background goroutine that reads the network stream into a 512 KB ring buffer with a pre-buffering check. This basically decouples the network reading from audio playback, absorbing flaky network jitter and ensuring smooth playback.
+One of the most interesting parts of the project was handling network streams. HTTP network data doesn't always come at a steady rate, it comes at unpredictable bursts, especially on a flaky network connection. Initially, reading directly from `resp.Body` into the ICY + MP3 decoder caused lots of stuttering and freezing on the audio playback. To fix this, I had to implement a background goroutine that reads the network stream into a 512 KiB ring buffer with a pre-buffering check. This basically decouples the network reading from audio playback, absorbing flaky network jitter and ensuring smooth playback.
+
 MPRIS support and Discord Rich Presence also deserve a mention. MPRIS support was a bit tricky to implement because I've never worked with D-Bus before, but I managed to figure it out and it works on GNOME (my DE) now. Discord Rich Presence was a little easier to implement, basically what I had to do was first register my app on the Discord Developer Portal, but then I had to vendor and patch an existing Go package because it didn't look for Discord running in Flatpak. After fixing it, it works pretty much flawlessly now.
+
+### Personal anecdotes
 
 Building a complete desktop app with Wails and Svelte was... an interesting experience. I'm new to web development but I learned a lot and I think the result is pretty good. :D
 I actually originally wanted to learn Wails and Svelte anyways for one of my other projects, [GoTAU](https://github.com/SladkyCitron/gotau), but after trying Wails out, I decided that [Gio](https://gioui.org) would be a better fit for GoTAU, but I used Wails for this project and learned webdev anyways, so there's that. Also screw Rust.
@@ -69,10 +75,23 @@ I did very little AI-assisted coding, I just used GitHub Copilot a little bit to
 
 ### Project structure
 
-- `.github/workflows` - GitHub Actions for building and releasing the app
+- `.github/workflows/release.yml` - GitHub Action for building and releasing the app
 - `bin` - built app binaries
 - `build` - build files and scripts (Dockerfiles, manifests, icons, etc.)
 - `frontend` - Svelte 5 + TypeScript frontend
+  - `package.json` and `package-lock.json` - npm package files
+  - `bindings` - generated Wails bindings for Go services
+  - `dist` - built frontend files
+  - `messages` - Paraglide messages for i18n
+  - `project.inlang` - Paraglide project file for i18n
+  - `public` - static assets
+  - `src` - Svelte 5 + TypeScript source code
+    - `lib/components` - Svelte components
+      - `ui` - shadcn UI components
+      - `views` - app views (Explore, Search, Favorites, Settings)
+    - `lib/paraglide` - generated Paraglide i18n code
+    - `lib/stores` - Svelte stores for app state management across components
+    - `main.ts` and `App.svelte` - main entry point for the frontend
 - `service` - Go backend Wails services (for stuff like stations, player, settings, etc.)
   - `config.go` - configuration service (for reading/writing settings)
   - `ipinfo.go` - IP info service (for getting the user's country and city for station filtering)
@@ -84,6 +103,10 @@ I did very little AI-assisted coding, I just used GitHub Copilot a little bit to
 - `mpris` - MPRIS support (for Linux media keys and media players)
 - `discordrichpresence` - Discord Rich Presence support, originally vendored from [discordrichpresence](https://github.com/jacksonthemaster/discordrichpresence) but patched to support Discord running in Flatpak
 - `version` - version information
+- `main.go` - main entry point for the app
+- `go.mod` and `go.sum` - Go module files
+- the Taskfiles - scripts for building and running the app
+- `README.md` - this file
 
 ## ⚖️ License
 
