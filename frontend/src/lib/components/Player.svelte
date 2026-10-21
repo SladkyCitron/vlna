@@ -42,11 +42,16 @@
 
     function escapeMiku(name: string) {
       return name
-        .replace(/hatsune.miku/i, "<strong>Hatsune Miku</strong>")
-        .replace(/miku.hatsune/i, "<strong>Miku Hatsune</strong>")
-        .replace(/miku/i, "<strong>Miku</strong>")
-        .replace(/初音ミク/i, "<strong>初音ミク</strong>")
-        .replace(/ミク/i, "<strong>ミク</strong>");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;")
+        .replace(/hatsune.miku/gi, "<strong>Hatsune Miku</strong>")
+        .replace(/miku.hatsune/gi, "<strong>Miku Hatsune</strong>")
+        .replace(/miku/gi, "<strong>Miku</strong>")
+        .replace(/初音ミク/gi, "<strong>初音ミク</strong>")
+        .replace(/ミク/gi, "<strong>ミク</strong>");
     }
 
     if ($currentSongMetadata?.artist) {
