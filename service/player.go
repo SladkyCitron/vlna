@@ -146,6 +146,7 @@ func (s *PlayerService) Play(station Station) error {
 		application.Get().Event.Emit("player:icy-metadata", m)
 	})
 
+	// This read code was partly assisted by Copilot
 	readErr := make(chan error, 1)
 	go func() {
 		tmp := make([]byte, 4096)

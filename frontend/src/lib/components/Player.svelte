@@ -109,6 +109,8 @@
     }
   }}
 />
+
+<!-- This player code was partly assisted by Copilot -->
 <footer
   class="border-border bg-card col-span-2 row-start-3 flex min-h-20 w-full items-center gap-4 border-t px-4 py-3 select-none"
 >

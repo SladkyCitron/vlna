@@ -19,6 +19,7 @@
   let version = $state("");
   let discordRPC = $state(true);
 
+  // This load code was assisted by Copilot
   onMount(async () => {
     const [loadedVersion, config] = await Promise.all([
       VersionService.GetVersion(),

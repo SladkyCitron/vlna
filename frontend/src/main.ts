@@ -4,6 +4,7 @@ import App from "./App.svelte";
 import { setLocale, isLocale } from "$lib/paraglide/runtime.js";
 import { ConfigService } from "$bindings/github.com/SladkyCitron/vlna/service";
 
+// This start function code was partly assisted by Copilot
 async function start() {
   try {
     const config = await ConfigService.GetConfig();

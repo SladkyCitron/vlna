@@ -6,6 +6,7 @@
 
   let maximized = $state(false);
 
+  // This maximize code was partly assisted by Copilot
   onMount(() => {
     Window.IsMaximised().then((isMaximized) => (maximized = isMaximized));
 

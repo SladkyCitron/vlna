@@ -32,6 +32,7 @@ export function loadFavorites(): Promise<void> {
   return loadPromise;
 }
 
+// This favorites code was assisted by Copilot
 export function toggleFavorite(station: Station) {
   if (!configLoaded) {
     void loadFavorites().then(() => toggleFavorite(station));
