@@ -10,8 +10,8 @@ info:
   productIdentifier: "dev.sladkycitron.vlna" # The unique product identifier
   description: "Internet radio player" # The application description
   copyright: "(c) 2026 SladkyCitron" # Copyright text
-  #comments: "Built with Go, Wails, and Svelte" # Comments
-  version: "0.0.0-dev" # The application version
+  comments: "" # Comments
+  version: "0.0.0" # The application version
   # cfBundleIconName: "appicon" # The macOS icon name in Assets.car icon bundles (optional)
   #                               # Should match the name of your .icon file without the extension
   #                               # If not set and Assets.car exists, defaults to "appicon"

@@ -14,7 +14,7 @@
     !define INFO_PRODUCTNAME "Vlna"
 !endif
 !ifndef INFO_PRODUCTVERSION
-    !define INFO_PRODUCTVERSION "0.0.0-dev"
+    !define INFO_PRODUCTVERSION "0.0.0"
 !endif
 !ifndef INFO_COPYRIGHT
     !define INFO_COPYRIGHT "(c) 2026 SladkyCitron"

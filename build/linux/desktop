@@ -7,5 +7,7 @@ Exec=/usr/local/bin/vlna %u
 Terminal=false
 Type=Application
 Icon=vlna
-Categories=AudioVideo;Player;Audio;Music;
+Categories=Utility;
 StartupWMClass=vlna
+
+ 
