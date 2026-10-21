@@ -21,8 +21,8 @@ contents:
     dst: "/usr/local/bin/vlna"
   - src: "./build/appicon.png"
     dst: "/usr/share/icons/hicolor/128x128/apps/vlna.png"
-  - src: "./build/linux/vlna.desktop"
-    dst: "/usr/share/applications/vlna.desktop"
+  - src: "./build/linux/dev.sladkycitron.vlna.desktop"
+    dst: "/usr/share/applications/dev.sladkycitron.vlna.desktop"
 
 # Default dependencies for the GTK4 + WebKitGTK 6.0 stack (Ubuntu 24.04+ / Debian 13+)
 depends:

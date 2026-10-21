@@ -43,6 +43,9 @@ func main() {
 		Mac: application.MacOptions{
 			ApplicationShouldTerminateAfterLastWindowClosed: true,
 		},
+		Linux: application.LinuxOptions{
+			ApplicationID: "dev.sladkycitron.vlna",
+		},
 		Logger: logger,
 	})
 

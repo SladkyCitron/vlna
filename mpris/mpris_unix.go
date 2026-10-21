@@ -121,7 +121,7 @@ func Init(service PlayerService) (*Server, error) {
 			"CanRaise":     {Value: true, Writable: false, Emit: prop.EmitTrue},
 			"HasTrackList": {Value: false, Writable: false, Emit: prop.EmitTrue},
 			"Identity":     {Value: "Vlna", Writable: false, Emit: prop.EmitTrue},
-			"DesktopEntry": {Value: "vlna", Writable: false, Emit: prop.EmitTrue},
+			"DesktopEntry": {Value: "dev.sladkycitron.vlna", Writable: false, Emit: prop.EmitTrue},
 		},
 		"org.mpris.MediaPlayer2.Player": {
 			"PlaybackStatus": {Value: "Stopped", Writable: false, Emit: prop.EmitTrue},

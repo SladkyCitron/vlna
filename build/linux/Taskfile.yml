@@ -123,7 +123,7 @@ tasks:
       APP_NAME: "{{.APP_NAME}}"
       APP_BINARY: "../../../bin/{{.APP_NAME}}"
       ICON: "{{.APP_NAME}}.png"
-      DESKTOP_FILE: "../{{.APP_NAME}}.desktop"
+      DESKTOP_FILE: "../{{.APP_ID}}.desktop"
       OUTPUT_DIR: "../../../bin"
 
   create:deb:
@@ -170,11 +170,11 @@ tasks:
     dir: build
     cmds:
       - mkdir -p {{.ROOT_DIR}}/build/linux/appimage
-      - wails3 generate .desktop -name "{{.APP_NAME}}" -exec "{{.EXEC}}" -icon "{{.ICON}}" -outputfile "{{.ROOT_DIR}}/build/linux/{{.APP_NAME}}.desktop" -categories "{{.CATEGORIES}}"
+      - wails3 generate .desktop -name "{{.APP_NAME}}" -exec "{{.EXEC}}" -icon "{{.ICON}}" -outputfile "{{.ROOT_DIR}}/build/linux/{{.APP_ID}}.desktop" -categories "{{.CATEGORIES}}"
     vars:
-      APP_NAME: "{{.APP_NAME}}"
-      EXEC: "{{.APP_NAME}}"
-      ICON: "{{.APP_NAME}}"
+      APP_NAME: "Vlna"
+      EXEC: "vlna"
+      ICON: "vlna"
       CATEGORIES: "AudioVideo;Player;Audio;Music;"
       OUTPUTFILE: "{{.ROOT_DIR}}/build/linux/{{.APP_NAME}}.desktop"
 
