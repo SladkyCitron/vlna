@@ -71,7 +71,7 @@ I actually originally wanted to learn Wails and Svelte anyways for one of my oth
 
 I first did the rough MVP, added some extra features and details, and then I sent the app to one of my friends (outside CS50x) to test it. After a few bugfixes and feedback, I think the app is now in a good state to be properly released.
 
-I did very little AI-assisted coding, I just used GitHub Copilot a little bit to help me out because it's free (via ISIC) and I don't have money for Claude.
+I did very little AI-assisted coding, I just used Google Gemini for general advice and GitHub Copilot a little bit to help me out because it's free (via ISIC) and I don't have money for Claude.
 
 ### Project structure
 
